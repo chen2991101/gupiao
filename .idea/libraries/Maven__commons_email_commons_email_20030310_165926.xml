@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: commons-email:commons-email:20030310.165926">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/commons-email/commons-email/20030310.165926/commons-email-20030310.165926.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/commons-email/commons-email/20030310.165926/commons-email-20030310.165926-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/commons-email/commons-email/20030310.165926/commons-email-20030310.165926-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
