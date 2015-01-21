@@ -1,9 +1,14 @@
 package com;
 
+import org.springframework.mail.javamail.JavaMailSenderImpl;
+import org.springframework.mail.javamail.MimeMessageHelper;
+
+import javax.mail.internet.MimeMessage;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.util.Properties;
 
 /**
  * 工具类方法
@@ -59,5 +64,45 @@ public class Utils {
             }
         }
         return sb.toString();
+    }
+
+
+    /**
+     * 发送邮件
+     *
+     * @param msg
+     */
+    public static void sendEMail(String msg) {
+
+        JavaMailSenderImpl senderImpl = new JavaMailSenderImpl();
+
+        // 设定mail server
+        senderImpl.setHost("smtp.163.com");
+
+        // 建立邮件消息,发送简单邮件和html邮件的区别
+        MimeMessage mailMessage = senderImpl.createMimeMessage();
+        MimeMessageHelper messageHelper = new MimeMessageHelper(mailMessage, "gbk");
+
+        // 设置收件人，寄件人
+        try {
+            messageHelper.setTo("195822080@qq.com");
+            messageHelper.setFrom("chen2991101@163.com");
+            messageHelper.setSubject("我的提示信息");
+            // true 表示启动HTML格式的邮件
+
+            messageHelper.setText(msg);
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        senderImpl.setUsername("chen2991101@163.com"); // 根据自己的情况,设置username
+        senderImpl.setPassword("195822080"); // 根据自己的情况, 设置password
+        Properties prop = new Properties();
+        prop.put("mail.smtp.auth", "true"); // 将这个参数设为true，让服务器进行认证,认证用户名和密码是否正确
+        prop.put("mail.smtp.timeout", "25000");
+        senderImpl.setJavaMailProperties(prop);
+        // 发送邮件
+        senderImpl.send(mailMessage);
     }
 }

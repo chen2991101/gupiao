@@ -59,6 +59,7 @@ public class MarketService {
             }
             method.releaseConnection();
         }
+        Utils.sendEMail(type + "股票获取完毕");//发送邮件提醒
     }
 
     @Transactional
