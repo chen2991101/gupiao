@@ -13,7 +13,7 @@ import javax.persistence.Table;
 public class Market extends BaseEntity {
 
 
-    public Market(String name, String no) {
+    public Market(String no, String name) {
         this.name = name;
         this.no = no;
     }
