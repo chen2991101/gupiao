@@ -272,7 +272,7 @@
         <dependency>
             <groupId>com.baidu.bae</groupId>
             <artifactId>baev3-sdk</artifactId>
-            <version>1.0.0</version>
+            <version>1.0.1</version>
             <type>jar</type>
         </dependency>
 
