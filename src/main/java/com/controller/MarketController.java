@@ -23,7 +23,18 @@ public class MarketController {
      */
     @RequestMapping(value = "addSh", produces = Utils.textutf8)
     @ResponseBody
-    public void addSh() {
+    public String addSh() {
         marketService.addMarket(true);
+        return "添加成功";
+    }
+
+    /**
+     * 添加深圳的股票
+     */
+    @RequestMapping(value = "addSz", produces = Utils.textutf8)
+    @ResponseBody
+    public String addSz() {
+        marketService.addMarket(false);
+        return "添加成功";
     }
 }

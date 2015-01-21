@@ -9,6 +9,7 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
@@ -44,14 +45,14 @@ public class MarketService {
             System.out.println(marketNo);
             String query = "s_" + type + String.format("%06d", marketNo);//请求的查询条件
 
-            if (marketNo + 9 < maxNo) {
-                query += Utils.appendQuery(9, type, marketNo);
+            if (marketNo + 19 < maxNo) {
+                query += Utils.appendQuery(19, type, marketNo);
             } else {
                 query += Utils.appendQuery(maxNo - marketNo - 1, type, marketNo);
             }
 
             HttpGet method = new HttpGet("http://qt.gtimg.cn/q=" + query);
-            marketNo += 10;//设置新的数据
+            marketNo += 20;//设置新的数据
             try {
                 HttpResponse response = httpClient.execute(method);
                 saveMarket(Utils.inputStream2String(response.getEntity().getContent()));//保存股票信息
@@ -68,15 +69,14 @@ public class MarketService {
         System.out.println("保存成功");
     }
 
-    @Transactional
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     private void saveMarket(String str) {
         String[] array = str.split(";");
-        for (String st : array) {
+        for (String st : array)
             if (st.indexOf("\"") != -1) {
                 // 如果没有引号说明没有数据
                 st = st.trim();
                 marketDao.save(new Market(st.substring(4, st.indexOf("=")), st.substring(14, st.length() - 1).split("~")[1]));
             }
-        }
     }
 }
