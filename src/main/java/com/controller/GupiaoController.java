@@ -11,6 +11,7 @@ public class GupiaoController {
 
     @RequestMapping("chen")
     public void chen() {
+
         System.out.println("你好");
     }
 }
