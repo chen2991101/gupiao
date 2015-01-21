@@ -69,7 +69,6 @@
           <element id="library" level="project" name="Maven: net.coobird:thumbnailator:0.4.2" />
           <element id="library" level="project" name="Maven: log4j:log4j:1.2.15" />
           <element id="library" level="project" name="Maven: javax.mail:mail:1.4" />
-          <element id="library" level="project" name="Maven: javax.servlet.jsp:jsp-api:2.1" />
           <element id="library" level="project" name="Maven: org.hibernate:hibernate-core:3.6.10.Final" />
           <element id="library" level="project" name="Maven: antlr:antlr:2.7.6" />
           <element id="library" level="project" name="Maven: commons-collections:commons-collections:3.1" />
@@ -83,6 +82,7 @@
           <element id="library" level="project" name="Maven: net.minidev:json-smart:1.2" />
           <element id="library" level="project" name="Maven: org.projectreactor:reactor-core:1.0.0.RELEASE" />
           <element id="library" level="project" name="Maven: com.lmax:disruptor:3.2.0" />
+          <element id="library" level="project" name="Maven: com.baidu.bae:baev3-sdk:1.0.1" />
         </element>
       </element>
     </root>
