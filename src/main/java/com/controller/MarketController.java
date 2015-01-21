@@ -48,4 +48,15 @@ public class MarketController {
         return "添加成功";
     }
 
+
+    /**
+     * 添加记录
+     */
+    @RequestMapping(value = "email", produces = Utils.textutf8)
+    @ResponseBody
+    public String email() {
+        Utils.sendEMail("邮件发送成功");
+        return "邮件发送成功";
+    }
+
 }
