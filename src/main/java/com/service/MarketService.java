@@ -110,8 +110,8 @@ public class MarketService {
                 if (method != null) {
                     method.releaseConnection();
                 }
-                Utils.sendEMail("行情添加成功");
             }
+            Utils.sendEMail("行情添加成功");
         } else {
             Utils.sendEMail("今天没有行情");
         }
