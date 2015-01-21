@@ -99,21 +99,18 @@ public class MarketService {
             for (int i = 0; i < sumPage; i++) {
                 index = 0;
                 list = marketDao.findAll(new PageRequest(i, pageSize)).getContent();//获取当前页的数据
-                while (index < list.size()) {
-                    query = list.get(index).getNo();
-                    if (index + 9 < list.size()) {
-                        query += Utils.appendQuery(9, "", index);
+                for (int j = 0; j < list.size(); j++) {
+                    if (j == 0) {
+                        query = list.get(j).getNo();
                     } else {
-                        query += Utils.appendQuery(list.size() - index - 1, "", index);
-                    }
-                    index += 10;
-                    HttpGet method = httpClient(query);
-                    if (method != null) {
-                        method.releaseConnection();
+                        query += ("," + list.get(j).getNo());
                     }
                 }
-
-
+                HttpGet method = httpClient(query);
+                if (method != null) {
+                    method.releaseConnection();
+                }
+                Utils.sendEMail("行情添加成功");
             }
         } else {
             Utils.sendEMail("今天没有行情");
