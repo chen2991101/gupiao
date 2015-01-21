@@ -42,7 +42,6 @@ public class MarketService {
 
         HttpClient httpClient = new DefaultHttpClient();//httpclient请求
         while (marketNo <= maxNo) {
-            System.out.println(marketNo);
             String query = "s_" + type + String.format("%06d", marketNo);//请求的查询条件
 
             if (marketNo + 19 < maxNo) {
@@ -61,12 +60,6 @@ public class MarketService {
             }
             method.releaseConnection();
         }
-
-        System.out.println("******************************************");
-        System.out.println("******************************************");
-        System.out.println("******************************************");
-        System.out.println("******************************************");
-        System.out.println("保存成功");
     }
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
