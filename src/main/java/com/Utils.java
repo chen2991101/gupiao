@@ -1,5 +1,9 @@
 package com;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
 
@@ -104,5 +108,27 @@ public class Utils {
         senderImpl.setJavaMailProperties(prop);
         // 发送邮件
         senderImpl.send(mailMessage);
+    }
+
+
+    /**
+     * 获取今天有没有交易数据
+     *
+     * @return
+     */
+    public static String getGuPiaoDate() {
+        String date = null;
+        try {
+            HttpClient httpClient = new DefaultHttpClient();
+            HttpGet method = new HttpGet("http://qt.gtimg.cn/q=sz000001");
+            HttpResponse response = httpClient.execute(method);
+            String context = inputStream2String(response.getEntity().getContent());// 获取的信息
+            String[] array = context.trim().split("~");
+            date = array[30].substring(0, 8);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return getGuPiaoDate();
+        }
+        return date;
     }
 }

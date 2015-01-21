@@ -11,7 +11,8 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "tb_market")
 public class Market extends BaseEntity {
-
+    public Market() {
+    }
 
     public Market(String no, String name) {
         this.name = name;

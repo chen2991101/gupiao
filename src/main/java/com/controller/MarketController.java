@@ -37,4 +37,15 @@ public class MarketController {
         marketService.addMarket(false);
         return "添加成功";
     }
+
+    /**
+     * 添加记录
+     */
+    @RequestMapping(value = "addRecords", produces = Utils.textutf8)
+    @ResponseBody
+    public String addRecords() {
+        marketService.addRecords();
+        return "添加成功";
+    }
+
 }
