@@ -24,7 +24,7 @@ public class MarketController {
     @RequestMapping(value = "addSh", produces = Utils.textutf8)
     @ResponseBody
     public String addSh() {
-        marketService.addMarket(true);
+        addMarket(true);
         return "添加成功";
     }
 
@@ -34,7 +34,7 @@ public class MarketController {
     @RequestMapping(value = "addSz", produces = Utils.textutf8)
     @ResponseBody
     public String addSz() {
-        marketService.addMarket(false);
+        addMarket(false);
         return "添加成功";
     }
 
@@ -44,7 +44,12 @@ public class MarketController {
     @RequestMapping(value = "addRecords", produces = Utils.textutf8)
     @ResponseBody
     public String addRecords() {
-        marketService.addRecords();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                marketService.addRecords();
+            }
+        }).start();
         return "添加成功";
     }
 
@@ -59,4 +64,18 @@ public class MarketController {
         return "邮件发送成功";
     }
 
+
+    /**
+     * 添加股票信息
+     *
+     * @param isSh 是否是上海的股票
+     */
+    private void addMarket(final boolean isSh) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                marketService.addMarket(isSh);
+            }
+        }).start();
+    }
 }
