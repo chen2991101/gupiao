@@ -48,7 +48,7 @@
            <property name="username" value="WC4q5m8ZXbMTWT7Glhi4OrCV"/>
            <property name="password" value="15FSzP6X0BSEsRORkajVwmsGeSxjVvA1"/>
        </bean>
-     -->
+    -->
 
     <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
         <property name="entityManagerFactory" ref="entityManagerFactory"/>
