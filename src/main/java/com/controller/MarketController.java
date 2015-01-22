@@ -64,6 +64,17 @@ public class MarketController {
         return "邮件发送成功";
     }
 
+    /**
+     * 获取记录的数量，检查数据库连接是否正确
+     *
+     * @return
+     */
+    @RequestMapping(value = "count", produces = Utils.textutf8)
+    @ResponseBody
+    public String count() {
+        return marketService.findRecordsCount() + "";
+    }
+
 
     /**
      * 添加股票信息

@@ -86,6 +86,15 @@ public class MarketService {
     }
 
     /**
+     * 获取记录的总数量
+     *
+     * @return 总数量
+     */
+    public long findRecordsCount() {
+        return recordsDao.count();
+    }
+
+    /**
      * 添加股票行情
      */
     public void addRecords() {
