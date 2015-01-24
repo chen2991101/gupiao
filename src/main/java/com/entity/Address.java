@@ -17,7 +17,15 @@ public class Address extends BaseEntity {
     private double longitude;// 经度
     private String deviceId;// 设置Id
     private float radius;//定位精度
+    private String model;//手机型号
 
+    public String getModel() {
+        return model;
+    }
+
+    public void setModel(String model) {
+        this.model = model;
+    }
 
     public float getRadius() {
         return radius;

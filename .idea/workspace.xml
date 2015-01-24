@@ -6,13 +6,8 @@
     </artifacts-to-build>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="386c419c-f7a2-4505-8e42-a266f85c9ca4" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/com/entity/Address.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/com/controller/AddressController.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/com/dao/AddressDao.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/com/service/AddressService.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/encodings.xml" afterPath="$PROJECT_DIR$/.idea/encodings.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/artifacts/gupiao_war_exploded.xml" afterPath="$PROJECT_DIR$/.idea/artifacts/gupiao_war_exploded.xml" />
+    <list default="true" id="386c419c-f7a2-4505-8e42-a266f85c9ca4" name="Default" comment="添加位置管理的方法">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/entity/Address.java" afterPath="$PROJECT_DIR$/src/main/java/com/entity/Address.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="gupiao.iws" />
@@ -57,16 +52,20 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Address.java" pinned="false" current-in-tab="false">
+      <file leaf-file-name="Address.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/entity/Address.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1326">
-              <caret line="17" column="35" selection-start-line="17" selection-start-column="35" selection-end-line="17" selection-end-column="35" />
+            <state vertical-scroll-proportion="0.45217392" vertical-offset="0" max-vertical-offset="1534">
+              <caret line="11" column="27" selection-start-line="11" selection-start-column="27" selection-end-line="11" selection-end-column="27" />
               <folding>
-                <element signature="e#408#409#0" expanded="true" />
-                <element signature="e#437#438#0" expanded="true" />
-                <element signature="e#480#481#0" expanded="true" />
-                <element signature="e#516#517#0" expanded="true" />
+                <element signature="e#439#440#0" expanded="true" />
+                <element signature="e#467#468#0" expanded="true" />
+                <element signature="e#509#510#0" expanded="true" />
+                <element signature="e#543#544#0" expanded="true" />
+                <element signature="e#575#576#0" expanded="true" />
+                <element signature="e#604#605#0" expanded="true" />
+                <element signature="e#647#648#0" expanded="true" />
+                <element signature="e#683#684#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -92,10 +91,10 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="AddressController.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="AddressController.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/controller/AddressController.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.67826086" vertical-offset="0" max-vertical-offset="988">
+            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="988">
               <caret line="15" column="32" selection-start-line="15" selection-start-column="32" selection-end-line="15" selection-end-column="32" />
               <folding>
                 <element signature="imports" expanded="true" />
@@ -179,9 +178,9 @@
         <option value="$PROJECT_DIR$/web/WEB-INF/applicationContext.xml" />
         <option value="$PROJECT_DIR$/src/main/java/com/dao/Address.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/dao/AddresstDao.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/entity/Address.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/service/AddressService.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/controller/AddressController.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/entity/Address.java" />
       </list>
     </option>
   </component>
@@ -894,7 +893,7 @@
       <workItem from="1421890521589" duration="978000" />
       <workItem from="1421929724593" duration="2237000" />
       <workItem from="1422016236091" duration="3683000" />
-      <workItem from="1422069724703" duration="876000" />
+      <workItem from="1422069724703" duration="1562000" />
     </task>
     <task id="LOCAL-00001" summary="创建项目">
       <created>1421750157214</created>
@@ -992,11 +991,17 @@
       <option name="project" value="LOCAL" />
       <updated>1421932843450</updated>
     </task>
-    <option name="localTasksCounter" value="17" />
+    <task id="LOCAL-00017" summary="添加位置管理的方法">
+      <created>1422070620760</created>
+      <option name="number" value="00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1422070620760</updated>
+    </task>
+    <option name="localTasksCounter" value="18" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="22163000" />
+    <option name="totallyTimeSpent" value="22849000" />
   </component>
   <component name="TodoView" selected-index="0">
     <todo-panel id="selected-file">
@@ -1084,7 +1089,8 @@
     <MESSAGE value="添加邮件的功能" />
     <MESSAGE value="添加多线程获取数据" />
     <MESSAGE value="添加检查数据库连接是否正确的方法" />
-    <option name="LAST_COMMIT_MESSAGE" value="添加检查数据库连接是否正确的方法" />
+    <MESSAGE value="添加位置管理的方法" />
+    <option name="LAST_COMMIT_MESSAGE" value="添加位置管理的方法" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
@@ -1460,19 +1466,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/entity/Address.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1326">
-          <caret line="17" column="35" selection-start-line="17" selection-start-column="35" selection-end-line="17" selection-end-column="35" />
-          <folding>
-            <element signature="e#408#409#0" expanded="true" />
-            <element signature="e#437#438#0" expanded="true" />
-            <element signature="e#480#481#0" expanded="true" />
-            <element signature="e#516#517#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/service/AddressService.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="234" max-vertical-offset="832">
@@ -1495,10 +1488,27 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/controller/AddressController.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.67826086" vertical-offset="0" max-vertical-offset="988">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="988">
           <caret line="15" column="32" selection-start-line="15" selection-start-column="32" selection-end-line="15" selection-end-column="32" />
           <folding>
             <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/entity/Address.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.45217392" vertical-offset="0" max-vertical-offset="1534">
+          <caret line="11" column="27" selection-start-line="11" selection-start-column="27" selection-end-line="11" selection-end-column="27" />
+          <folding>
+            <element signature="e#439#440#0" expanded="true" />
+            <element signature="e#467#468#0" expanded="true" />
+            <element signature="e#509#510#0" expanded="true" />
+            <element signature="e#543#544#0" expanded="true" />
+            <element signature="e#575#576#0" expanded="true" />
+            <element signature="e#604#605#0" expanded="true" />
+            <element signature="e#647#648#0" expanded="true" />
+            <element signature="e#683#684#0" expanded="true" />
           </folding>
         </state>
       </provider>
