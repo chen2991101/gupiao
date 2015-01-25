@@ -8,6 +8,7 @@ $(function () {
             border: false,
             pageSize: 30,
             pageList: [30, 40, 50, 60],
+            striped: true,
             columns: [[
                 {field: 'address', title: '地址', width: 200, align: 'center'},
                 {field: 'latitude', title: '纬度', width: 100, align: 'center'},
