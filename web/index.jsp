@@ -1,16 +1,28 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: Administrator
-  Date: 2015-01-20
-  Time: 15:16
-  To change this template use File | Settings | File Templates.
---%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
     <title>你好吗</title>
+    <script type="text/javascript" src="easyUI/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css"
+          href="easyUI/themes/default/easyui.css">
+    <link rel="stylesheet" type="text/css" href="easyUI/themes/icon.css">
+    <script type="text/javascript" src="easyUI/jquery.easyui.min.js"></script>
+    <script type="text/javascript" src="easyUI/locale/easyui-lang-zh_CN.js"></script>
+    <script type="text/javascript" src="/js/util.js"></script>
+    <script type="text/javascript">
+        var basrUrl = 'http://127.0.0.1';
+        //var basrUrl = 'http://haogupiao.duapp.com';
+    </script>
 </head>
 <body>
-陈鸿浩
+<div class="easyui-layout" fit=true border=false>
+    <div region="west" style="width: 200px;" border=false
+         href='/view/left.html' split="true" title="菜单"></div>
+    <div region="center" id="index_center"
+         border=false>
+        <div id="index_tab" class="easyui-tabs" fit=true border=false>
+        </div>
+    </div>
+</div>
 </body>
 </html>
