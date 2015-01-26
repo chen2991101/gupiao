@@ -25,4 +25,8 @@ public interface RecordsDao extends PagingAndSortingRepository<Records, String> 
 
     @Query("SELECT r.time FROM Records r GROUP BY r.time")
     List<Integer> findTimes(Pageable pageable);
+
+    Page<Records> findByTime(Integer time, Pageable pageable);
+
+
 }

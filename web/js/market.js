@@ -1,5 +1,6 @@
 $(function () {
         $('#market_table').datagrid({
+            url: basrUrl + "/market/findRecords.do",
             rownumbers: true,
             pagination: true,
             fit: true,
@@ -19,7 +20,16 @@ $(function () {
                 {field: 'in_dish', title: '内盘', width: 100, align: 'center'},
                 {field: 'dealAmount', title: '成交额', width: 100, align: 'center'},
                 {field: 'handover', title: '换手率', width: 100, align: 'center'},
-                {field: 'time', title: '时间', width: 100, align: 'center'}
+                {
+                    field: 'time',
+                    title: '时间',
+                    width: 100,
+                    align: 'center',
+                    formatter: function (value, rowData, rowIndex) {
+                        value = value + "";
+                        return value.substr(0, 4) + "-" + value.substr(4, 2) + "-" + value.substr(6, 2);
+                    }
+                }
             ]]
         });
     }

@@ -5,12 +5,15 @@ import com.dao.MarketDao;
 import com.dao.RecordsDao;
 import com.entity.Market;
 import com.entity.Records;
+import org.apache.commons.collections.map.HashedMap;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,6 +21,7 @@ import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 操作股票的service
@@ -31,6 +35,23 @@ public class MarketService {
     RecordsDao recordsDao;
     private int pageSize = 10;
     private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
+
+
+    /**
+     * 获取股票记录
+     *
+     * @param pageNo   页数
+     * @param pageSize 每页的条数
+     */
+    public Map<String, Object> findRecords(int pageNo, int pageSize) {
+        Map<String, Object> map = new HashedMap();
+        List<Integer> times = recordsDao.findTimes(new PageRequest(0, 1, new Sort(new Sort.Order(Sort.Direction.DESC, "time"))));//获取最新的时间
+        Page<Records> page = recordsDao.
+                findByTime(times.get(0), new PageRequest(pageNo - 1, pageSize, new Sort(new Sort.Order(Sort.Direction.DESC, "time"))));
+        map.put("total", page.getTotalElements());
+        map.put("rows", page.getContent());
+        return map;
+    }
 
     /**
      * 添加股票信息

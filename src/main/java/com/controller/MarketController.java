@@ -1,6 +1,7 @@
 package com.controller;
 
 import com.Utils;
+import com.alibaba.fastjson.JSONObject;
 import com.service.MarketService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -77,6 +78,18 @@ public class MarketController {
 
 
     /**
+     * 查询股票记录
+     *
+     * @return
+     */
+    @RequestMapping(value = "findRecords", produces = Utils.textutf8)
+    @ResponseBody
+    public String findRecords(int page, int rows) {
+        return JSONObject.toJSONString(marketService.findRecords(page, rows));
+    }
+
+
+    /**
      * 添加股票信息
      *
      * @param isSh 是否是上海的股票
@@ -89,4 +102,6 @@ public class MarketController {
             }
         }).start();
     }
+
+
 }
