@@ -1,6 +1,6 @@
 $(function () {
     $('#market').bind('click', function () {
-        alert('easyui');
+        addTabs('index_tab', '股票', '/view/market.html');
     });
 
     $('#address').bind('click', function () {
