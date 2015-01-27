@@ -115,6 +115,25 @@ public class MarketService {
         return recordsDao.count();
     }
 
+
+    /**
+     * 删除已经退市的股票
+     */
+    @Transactional
+    public void deleteBack() {
+        List<String> list = recordsDao.findBack();
+        if (list != null) {
+            int i = 0;
+            for (String s : list) {
+                i = marketDao.deleteBack(Integer.parseInt(s) > 500000 ? "sh" + s : "sz" + s);
+                if (i > 0) {
+                    recordsDao.deleteByNo(s);
+                }
+            }
+        }
+    }
+
+
     /**
      * 添加股票行情
      */
@@ -236,4 +255,22 @@ public class MarketService {
     }
 
 
+    /**
+     * 查询股票的历史
+     */
+    public String findHistory() {
+        HttpClient httpClient = new DefaultHttpClient();//httpclient请求
+        String query = "http://money.finance.sina.com.cn/corp/go.php/vMS_MarketHistory/stockid/601000.phtml";
+        HttpGet method = new HttpGet(query);
+        String res = "";//返回的数据
+        try {
+            HttpResponse response = httpClient.execute(method);
+
+            res = Utils.inputStream2String(response.getEntity().getContent());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        method.releaseConnection();
+        return res;
+    }
 }

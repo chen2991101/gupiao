@@ -3,6 +3,7 @@ package com.dao;
 import com.entity.Records;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
@@ -28,5 +29,11 @@ public interface RecordsDao extends PagingAndSortingRepository<Records, String> 
 
     Page<Records> findByTime(Integer time, Pageable pageable);
 
+    @Query("SELECT r.no FROM Records r WHERE r.ltsz=0 GROUP BY r.no")
+    List<String> findBack();
+
+    @Query("delete from Records r where r.no=?1")
+    @Modifying
+    void deleteByNo(String no);
 
 }
