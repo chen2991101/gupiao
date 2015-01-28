@@ -7,7 +7,6 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="386c419c-f7a2-4505-8e42-a266f85c9ca4" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/service/MarketService.java" afterPath="$PROJECT_DIR$/src/main/java/com/service/MarketService.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="gupiao.iws" />
@@ -77,8 +76,8 @@
       <file leaf-file-name="MarketService.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/service/MarketService.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="1.2112676" vertical-offset="5929" max-vertical-offset="7035">
-              <caret line="313" column="13" selection-start-line="313" selection-start-column="13" selection-end-line="313" selection-end-column="13" />
+            <state vertical-scroll-proportion="1.084507" vertical-offset="5740" max-vertical-offset="7035">
+              <caret line="301" column="21" selection-start-line="301" selection-start-column="21" selection-end-line="301" selection-end-column="21" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -856,7 +855,7 @@
       <workItem from="1422016236091" duration="3683000" />
       <workItem from="1422069724703" duration="1562000" />
       <workItem from="1422338411664" duration="11733000" />
-      <workItem from="1422414800468" duration="10692000" />
+      <workItem from="1422414800468" duration="10931000" />
     </task>
     <task id="LOCAL-00001" summary="创建项目">
       <created>1421750157214</created>
@@ -990,11 +989,17 @@
       <option name="project" value="LOCAL" />
       <updated>1422439166115</updated>
     </task>
-    <option name="localTasksCounter" value="23" />
+    <task id="LOCAL-00023" summary="添加股票的历史记录">
+      <created>1422439195114</created>
+      <option name="number" value="00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1422439195114</updated>
+    </task>
+    <option name="localTasksCounter" value="24" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="45274000" />
+    <option name="totallyTimeSpent" value="45513000" />
   </component>
   <component name="TodoView" selected-index="0">
     <todo-panel id="selected-file">
@@ -1511,8 +1516,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/service/MarketService.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="1.2112676" vertical-offset="5929" max-vertical-offset="7035">
-          <caret line="313" column="13" selection-start-line="313" selection-start-column="13" selection-end-line="313" selection-end-column="13" />
+        <state vertical-scroll-proportion="1.084507" vertical-offset="5740" max-vertical-offset="7035">
+          <caret line="301" column="21" selection-start-line="301" selection-start-column="21" selection-end-line="301" selection-end-column="21" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
