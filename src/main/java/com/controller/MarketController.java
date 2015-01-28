@@ -1,16 +1,12 @@
 package com.controller;
 
-import com.GetDataFromYahooUtil;
 import com.Utils;
 import com.alibaba.fastjson.JSONObject;
-import com.entity.Records;
 import com.service.MarketService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-
-import java.util.List;
 
 /**
  * 股票的controller
@@ -90,23 +86,6 @@ public class MarketController {
     @ResponseBody
     public String findRecords(int page, int rows) {
         return JSONObject.toJSONString(marketService.findRecords(page, rows));
-    }
-
-    /**
-     * 查询股票历史
-     *
-     * @return
-     */
-    @RequestMapping(value = "findHistory", produces = Utils.textutf8)
-    @ResponseBody
-    public String findHistory() {
-        //return marketService.findHistory();
-        List<Records> records = GetDataFromYahooUtil.getStockCsvData("601021.ss", "2015-01-01");
-        String time = "";
-        for (Records record : records) {
-            time += ("_" + record.getTime());
-        }
-        return time;
     }
 
     /**
