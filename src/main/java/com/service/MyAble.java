@@ -1,0 +1,29 @@
+package com.service;
+
+import com.entity.Market;
+
+import java.util.List;
+
+public class MyAble extends Thread {
+
+    private MarketService service;
+    private int size;
+    private int page;
+    List<Market> list;
+
+    public MyAble(MarketService service, int size, int page) {
+        this.size = size;
+        this.service = service;
+        this.page = page;
+    }
+
+    @Override
+    public void run() {
+        for (int i = page; i < page + size; i++) {
+            list = service.findMarket(i);
+            for (Market market : list) {
+                service.findHistory(market.getNo().substring(2),market.getName());
+            }
+        }
+    }
+}

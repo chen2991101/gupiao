@@ -10,6 +10,10 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -17,6 +21,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -256,21 +261,71 @@ public class MarketService {
 
 
     /**
+     * 添加历史
+     */
+    public void addHistory() {
+        long count = marketDao.count();
+        int sumPage = (int) (count / pageSize + (count % pageSize > 0 ? 1 : 0));// 总页数
+        int c = sumPage / 4;// 每页的条数
+        new MyAble(this, c, 1).start();
+        new MyAble(this, c, 1 + c).start();
+        new MyAble(this, c, 1 + 2 * c).start();
+        new MyAble(this, c, 1 + 3 * c).start();
+        new MyAble(this, (int) (sumPage - 4 * c), 1 + 4 * c).start();
+    }
+
+
+    /**
      * 查询股票的历史
      */
-    public String findHistory() {
-        HttpClient httpClient = new DefaultHttpClient();//httpclient请求
-        String query = "http://money.finance.sina.com.cn/corp/go.php/vMS_MarketHistory/stockid/601000.phtml";
-        HttpGet method = new HttpGet(query);
-        String res = "";//返回的数据
+    public String findHistory(String no, String name) {
+        String url = "http://money.finance.sina.com.cn/corp/go.php/vMS_MarketHistory/stockid/" + no + ".phtml";
+        Document doc = null;
         try {
-            HttpResponse response = httpClient.execute(method);
-
-            res = Utils.inputStream2String(response.getEntity().getContent());
-        } catch (Exception e) {
-            e.printStackTrace();
+            doc = Jsoup.connect(url).timeout(5000).get();
+        } catch (IOException e) {
+            findHistory(no, name);
         }
-        method.releaseConnection();
-        return res;
+        Element element = doc.getElementById("FundHoldSharesTable");
+        Elements elements = null;
+        try {
+            elements = element.getElementsByTag("tr");
+        } catch (Exception e) {
+            System.out.println("*******************");
+            System.out.println(no);
+            System.out.println("*******************");
+        }
+
+        if (element != null && elements.size() > 2) {
+            int time;//股票的时间
+            for (int i = 2; i < elements.size(); i++) {
+                String[] array = elements.get(i).text().split(" ");
+                time = Integer.parseInt(array[0].replaceAll("-", ""));
+                if (time >= 20150121) {
+                    continue;
+                }
+                Records records = new Records();
+                records.setTime(time);
+                records.setName(name);
+                records.setNo(no);
+                records.setToday_open(new BigDecimal(array[1]));
+                records.setHeightest(new BigDecimal(array[2]));
+                records.setCurrentPrice(new BigDecimal(array[3]));
+                records.setLowest(new BigDecimal(array[4]));
+                records.setDeal(new BigDecimal(array[5]));
+                recordsDao.save(records);
+            }
+        }
+        return element.text();
     }
+
+    /**
+     * 查询股票
+     */
+    @Transactional
+    public List<Market> findMarket(int page) {
+        Page<Market> p = marketDao.findAll(new PageRequest(page - 1, pageSize));
+        return p.getContent();
+    }
+
 }

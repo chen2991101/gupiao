@@ -102,6 +102,16 @@ public class MarketController {
 
 
     /**
+     * 添加历史
+     */
+    @RequestMapping(value = "addHistory", produces = Utils.textutf8)
+    @ResponseBody
+    public String addHistory() {
+        marketService.addHistory();
+        return "";
+    }
+
+    /**
      * 添加股票信息
      *
      * @param isSh 是否是上海的股票
