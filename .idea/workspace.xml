@@ -7,12 +7,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="386c419c-f7a2-4505-8e42-a266f85c9ca4" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/com/service/MyAble.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/controller/MarketController.java" afterPath="$PROJECT_DIR$/src/main/java/com/controller/MarketController.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/service/MarketService.java" afterPath="$PROJECT_DIR$/src/main/java/com/service/MarketService.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/gupiao.iml" afterPath="$PROJECT_DIR$/gupiao.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/artifacts/gupiao_war_exploded.xml" afterPath="$PROJECT_DIR$/.idea/artifacts/gupiao_war_exploded.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pom.xml" afterPath="$PROJECT_DIR$/pom.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="gupiao.iws" />
@@ -67,11 +62,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="MarketController.java" pinned="false" current-in-tab="false">
+      <file leaf-file-name="MarketController.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/controller/MarketController.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="1676" max-vertical-offset="2541">
-              <caret line="109" column="30" selection-start-line="109" selection-start-column="30" selection-end-line="109" selection-end-column="30" />
+            <state vertical-scroll-proportion="0.854386" vertical-offset="1928" max-vertical-offset="2541">
+              <caret line="127" column="0" selection-start-line="127" selection-start-column="0" selection-end-line="127" selection-end-column="0" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -79,11 +74,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="MarketService.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="MarketService.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/service/MarketService.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.8390342" vertical-offset="5925" max-vertical-offset="7035">
-              <caret line="304" column="29" selection-start-line="304" selection-start-column="29" selection-end-line="304" selection-end-column="29" />
+            <state vertical-scroll-proportion="-2.75" vertical-offset="5358" max-vertical-offset="7035">
+              <caret line="265" column="16" selection-start-line="265" selection-start-column="16" selection-end-line="265" selection-end-column="16" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -105,7 +100,7 @@
         <entry file="file://$PROJECT_DIR$/src/main/java/com/service/MyAble.java">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0" vertical-offset="165" max-vertical-offset="735">
-              <caret line="24" column="24" selection-start-line="24" selection-start-column="24" selection-end-line="24" selection-end-column="24" />
+              <caret line="20" column="23" selection-start-line="20" selection-start-column="23" selection-end-line="20" selection-end-column="23" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -180,9 +175,9 @@
         <option value="$PROJECT_DIR$/src/main/java/com/dao/MarketDao.java" />
         <option value="$PROJECT_DIR$/pom.xml" />
         <option value="$PROJECT_DIR$/src/main/java/com/service/HangQingAble.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/controller/MarketController.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/service/MyAble.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/service/MarketService.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/controller/MarketController.java" />
       </list>
     </option>
   </component>
@@ -861,7 +856,7 @@
       <workItem from="1422016236091" duration="3683000" />
       <workItem from="1422069724703" duration="1562000" />
       <workItem from="1422338411664" duration="11733000" />
-      <workItem from="1422414800468" duration="9302000" />
+      <workItem from="1422414800468" duration="10598000" />
     </task>
     <task id="LOCAL-00001" summary="创建项目">
       <created>1421750157214</created>
@@ -977,11 +972,17 @@
       <option name="project" value="LOCAL" />
       <updated>1422414987766</updated>
     </task>
-    <option name="localTasksCounter" value="20" />
+    <task id="LOCAL-00020" summary="添加股票的历史记录">
+      <created>1422435490075</created>
+      <option name="number" value="00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1422435490075</updated>
+    </task>
+    <option name="localTasksCounter" value="21" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="43884000" />
+    <option name="totallyTimeSpent" value="45180000" />
   </component>
   <component name="TodoView" selected-index="0">
     <todo-panel id="selected-file">
@@ -1072,7 +1073,8 @@
     <MESSAGE value="添加位置管理的方法" />
     <MESSAGE value="添加删除退市的股票的方法" />
     <MESSAGE value="删除雅虎提供的方法，效果不好，只有一千多只股票" />
-    <option name="LAST_COMMIT_MESSAGE" value="删除雅虎提供的方法，效果不好，只有一千多只股票" />
+    <MESSAGE value="添加股票的历史记录" />
+    <option name="LAST_COMMIT_MESSAGE" value="添加股票的历史记录" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -1475,20 +1477,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/controller/MarketController.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="1676" max-vertical-offset="2541">
-          <caret line="109" column="30" selection-start-line="109" selection-start-column="30" selection-end-line="109" selection-end-column="30" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/service/MyAble.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="165" max-vertical-offset="735">
-          <caret line="24" column="24" selection-start-line="24" selection-start-column="24" selection-end-line="24" selection-end-column="24" />
+          <caret line="20" column="23" selection-start-line="20" selection-start-column="23" selection-end-line="20" selection-end-column="23" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
@@ -1497,8 +1489,18 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/service/MarketService.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.8390342" vertical-offset="5925" max-vertical-offset="7035">
-          <caret line="304" column="29" selection-start-line="304" selection-start-column="29" selection-end-line="304" selection-end-column="29" />
+        <state vertical-scroll-proportion="-2.75" vertical-offset="5358" max-vertical-offset="7035">
+          <caret line="265" column="16" selection-start-line="265" selection-start-column="16" selection-end-line="265" selection-end-column="16" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/controller/MarketController.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.854386" vertical-offset="1928" max-vertical-offset="2541">
+          <caret line="127" column="0" selection-start-line="127" selection-start-column="0" selection-end-line="127" selection-end-column="0" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>

@@ -108,7 +108,7 @@ public class MarketController {
     @ResponseBody
     public String addHistory() {
         marketService.addHistory();
-        return "";
+        return "正在添加记录";
     }
 
     /**
