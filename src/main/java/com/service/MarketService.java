@@ -290,31 +290,32 @@ public class MarketService {
         Elements elements = null;
         try {
             elements = element.getElementsByTag("tr");
+
+
+            if (element != null && elements.size() > 2) {
+                int time;//股票的时间
+                for (int i = 2; i < elements.size(); i++) {
+                    String[] array = elements.get(i).text().split(" ");
+                    time = Integer.parseInt(array[0].replaceAll("-", ""));
+                    if (time >= 20150121) {
+                        continue;
+                    }
+                    Records records = new Records();
+                    records.setTime(time);
+                    records.setName(name);
+                    records.setNo(no);
+                    records.setToday_open(new BigDecimal(array[1]));
+                    records.setHeightest(new BigDecimal(array[2]));
+                    records.setCurrentPrice(new BigDecimal(array[3]));
+                    records.setLowest(new BigDecimal(array[4]));
+                    records.setDeal(new BigDecimal(array[5]));
+                    recordsDao.save(records);
+                }
+            }
         } catch (Exception e) {
             System.out.println("*******************");
             System.out.println(no);
             System.out.println("*******************");
-        }
-
-        if (element != null && elements.size() > 2) {
-            int time;//股票的时间
-            for (int i = 2; i < elements.size(); i++) {
-                String[] array = elements.get(i).text().split(" ");
-                time = Integer.parseInt(array[0].replaceAll("-", ""));
-                if (time >= 20150121) {
-                    continue;
-                }
-                Records records = new Records();
-                records.setTime(time);
-                records.setName(name);
-                records.setNo(no);
-                records.setToday_open(new BigDecimal(array[1]));
-                records.setHeightest(new BigDecimal(array[2]));
-                records.setCurrentPrice(new BigDecimal(array[3]));
-                records.setLowest(new BigDecimal(array[4]));
-                records.setDeal(new BigDecimal(array[5]));
-                recordsDao.save(records);
-            }
         }
     }
 
