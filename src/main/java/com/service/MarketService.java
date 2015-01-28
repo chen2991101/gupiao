@@ -278,7 +278,7 @@ public class MarketService {
     /**
      * 查询股票的历史
      */
-    public String findHistory(String no, String name) {
+    public void findHistory(String no, String name) {
         String url = "http://money.finance.sina.com.cn/corp/go.php/vMS_MarketHistory/stockid/" + no + ".phtml";
         Document doc = null;
         try {
@@ -316,7 +316,6 @@ public class MarketService {
                 recordsDao.save(records);
             }
         }
-        return element.text();
     }
 
     /**
