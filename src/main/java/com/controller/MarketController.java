@@ -124,4 +124,11 @@ public class MarketController {
             }
         }).start();
     }
+
+
+    @RequestMapping(value = "findLimit", produces = Utils.textutf8)
+    @ResponseBody
+    public void findLimit() {
+        marketService.findLimitByNo();
+    }
 }

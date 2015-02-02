@@ -279,43 +279,43 @@ public class MarketService {
      * 查询股票的历史
      */
     public void findHistory(String no, String name) {
-        String url = "http://money.finance.sina.com.cn/corp/go.php/vMS_MarketHistory/stockid/" + no + ".phtml";
+        String url = "http://money.finance.sina.com.cn/corp/go.php/vMS_MarketHistory/stockid/" + no + ".phtml?year=2014&jidu=4";
         Document doc = null;
         try {
             doc = Jsoup.connect(url).timeout(5000).get();
         } catch (IOException e) {
             findHistory(no, name);
         }
-        Element element = doc.getElementById("FundHoldSharesTable");
-        Elements elements = null;
-        try {
-            elements = element.getElementsByTag("tr");
+        if (doc != null) {
+            try {
+                Element element = doc.getElementById("FundHoldSharesTable");
+                Elements elements = null;
+
+                elements = element.getElementsByTag("tr");
 
 
-            if (element != null && elements.size() > 2) {
-                int time;//股票的时间
-                for (int i = 2; i < elements.size(); i++) {
-                    String[] array = elements.get(i).text().split(" ");
-                    time = Integer.parseInt(array[0].replaceAll("-", ""));
-                    if (time >= 20150121) {
-                        continue;
+                if (element != null && elements.size() > 2) {
+                    int time;//股票的时间
+                    for (int i = 2; i < elements.size(); i++) {
+                        String[] array = elements.get(i).text().split(" ");
+                        time = Integer.parseInt(array[0].replaceAll("-", ""));
+                        if (time <= 20141216) {
+                            continue;
+                        }
+                        Records records = new Records();
+                        records.setTime(time);
+                        records.setName(name);
+                        records.setNo(no);
+                        records.setToday_open(new BigDecimal(array[1]));
+                        records.setHeightest(new BigDecimal(array[2]));
+                        records.setCurrentPrice(new BigDecimal(array[3]));
+                        records.setLowest(new BigDecimal(array[4]));
+                        records.setDeal(new BigDecimal(array[5]));
+                        recordsDao.save(records);
                     }
-                    Records records = new Records();
-                    records.setTime(time);
-                    records.setName(name);
-                    records.setNo(no);
-                    records.setToday_open(new BigDecimal(array[1]));
-                    records.setHeightest(new BigDecimal(array[2]));
-                    records.setCurrentPrice(new BigDecimal(array[3]));
-                    records.setLowest(new BigDecimal(array[4]));
-                    records.setDeal(new BigDecimal(array[5]));
-                    recordsDao.save(records);
                 }
+            } catch (Exception e) {
             }
-        } catch (Exception e) {
-            System.out.println("*******************");
-            System.out.println(no);
-            System.out.println("*******************");
         }
     }
 
@@ -328,4 +328,22 @@ public class MarketService {
         return p.getContent();
     }
 
+
+    public void findLimitByNo() {
+        List<Records> list = recordsDao.findLimitByNo("000001", new PageRequest(0, 26, new Sort(new Sort.Order(Sort.Direction.DESC, "time")))).getContent();
+        if (list.size() == 26) {
+            BigDecimal ema26 = BigDecimal.ZERO;//ema12数据
+            BigDecimal ema12 = BigDecimal.ZERO;//ema26数据
+            BigDecimal day26 = new BigDecimal(351);
+            BigDecimal day12 = new BigDecimal(78);
+            for (int i = list.size() - 1; i >= 0; i--) {
+                ema26 = ema26.add((new BigDecimal(i + 1).divide(day26, 4, 4)).multiply(list.get(i).getCurrentPrice()));
+                if (i <= 11) {
+                    ema12 = ema12.add((new BigDecimal(i + 1).divide(day12, 4, 4)).multiply(list.get(i).getCurrentPrice()));
+                }
+                System.out.println(list.get(i).getCurrentPrice());
+            }
+            System.out.println("计算结果:" + ema12.subtract(ema26).toString());
+        }
+    }
 }

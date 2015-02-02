@@ -22,8 +22,9 @@ public class MyAble extends Thread {
         for (int i = page; i < page + size; i++) {
             list = service.findMarket(i);
             for (Market market : list) {
-                service.findHistory(market.getNo().substring(2),market.getName());
+                service.findHistory(market.getNo().substring(2), market.getName());
             }
         }
+        System.out.println("------------------线程执行完毕");
     }
 }

@@ -36,4 +36,8 @@ public interface RecordsDao extends PagingAndSortingRepository<Records, String> 
     @Modifying
     void deleteByNo(String no);
 
+
+    @Query("FROM Records r where r.no=?1")
+    Page<Records> findLimitByNo(String no, Pageable pageable);
+
 }
