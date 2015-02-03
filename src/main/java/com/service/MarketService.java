@@ -1,8 +1,12 @@
 package com.service;
 
 import com.Utils;
+import com.dao.MACDDao;
+import com.dao.MACDRecordsDao;
 import com.dao.MarketDao;
 import com.dao.RecordsDao;
+import com.entity.MACD;
+import com.entity.MACDRecords;
 import com.entity.Market;
 import com.entity.Records;
 import org.apache.commons.collections.map.HashedMap;
@@ -24,6 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -38,6 +43,10 @@ public class MarketService {
     MarketDao marketDao;
     @Autowired
     RecordsDao recordsDao;
+    @Autowired
+    MACDRecordsDao macdRecordsDao;
+    @Autowired
+    MACDDao macdDao;
     private int pageSize = 10;
     private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
 
@@ -274,17 +283,71 @@ public class MarketService {
         new MyAble(this, (int) (sumPage - 4 * c), 1 + 4 * c).start();
     }
 
-
     /**
-     * 查询股票的历史
+     * 计算macd
      */
-    public void findHistory(String no, String name) {
-        String url = "http://money.finance.sina.com.cn/corp/go.php/vMS_MarketHistory/stockid/" + no + ".phtml?year=2014&jidu=4";
+    public void macd() {
+
+        BigDecimal a11_13 = new BigDecimal(11).divide(new BigDecimal(13), 4, 4);
+        BigDecimal a2_10 = new BigDecimal(2).divide(new BigDecimal(10), 4, 4);
+        BigDecimal a8_10 = new BigDecimal(8).divide(new BigDecimal(10), 4, 4);
+        BigDecimal a2_13 = new BigDecimal(2).divide(new BigDecimal(13), 4, 4);
+        BigDecimal a25_27 = new BigDecimal(25).divide(new BigDecimal(27), 4, 4);
+        BigDecimal a2_27 = new BigDecimal(2).divide(new BigDecimal(27), 4, 4);
+        BigDecimal two = new BigDecimal(2);
+        List<MACD> macDlist = new ArrayList<MACD>();
+        MACD oldMacd = null;//前一天的macd
+
+        long count = marketDao.count();//所有股票的数量
+        int sumPage = (int) (count / pageSize + (count % pageSize > 0 ? 1 : 0));// 总页数
+        List<Market> markets;
+        for (int j = 0; j < sumPage; j++) {
+
+            markets = marketDao.findAll(new PageRequest(j, pageSize)).getContent();//获取当前页的数据
+            for (Market market : markets) {
+
+                List<MACDRecords> list = macdRecordsDao.findByNo(market.getNo().substring(2), new Sort(new Sort.Order("time")));
+                for (int i = 1; i < list.size(); i++) {
+                    MACD macd = new MACD();
+                    macd.setTime(list.get(i).getTime());
+                    macd.setNo(list.get(i).getNo());
+                    if (i == 1) {
+                        macd.setEma12((list.get(1).getPrice().subtract(list.get(0).getPrice())).multiply(a2_13).add(list.get(0).getPrice()));
+                        macd.setEma26((list.get(1).getPrice().subtract(list.get(0).getPrice())).multiply(a2_27).add(list.get(0).getPrice()));
+                    } else {
+                        oldMacd = macDlist.get(macDlist.size() - 1);
+                        macd.setEma12(oldMacd.getEma12().multiply(a11_13).add(list.get(i).getPrice().multiply(a2_13)));
+                        macd.setEma26(oldMacd.getEma26().multiply(a25_27).add(list.get(i).getPrice().multiply(a2_27)));
+                    }
+                    macd.setDiff(macd.getEma12().subtract(macd.getEma26()));
+                    if (i == 1) {
+                        macd.setDea(macd.getDiff().multiply(a2_10));
+                    } else {
+                        macd.setDea(oldMacd.getDea().multiply(a8_10).add(macd.getDiff().multiply(a2_10)));
+                    }
+                    macd.setBAR((macd.getDiff().subtract(macd.getDea())).multiply(two));
+                    macDlist.add(macd);
+                }
+                macdDao.save(macDlist);
+            }
+        }
+    }
+
+    @Transactional
+    public void addRecord(String no, int j) {
+        String url = "";
         Document doc = null;
+        if (j == 0) {
+            url = "http://money.finance.sina.com.cn/corp/go.php/vMS_MarketHistory/stockid/" + no + ".phtml";
+        } else {
+            url = "http://money.finance.sina.com.cn/corp/go.php/vMS_MarketHistory/stockid/" + no + ".phtml?year=2014&jidu=4";
+        }
+
         try {
             doc = Jsoup.connect(url).timeout(5000).get();
         } catch (IOException e) {
-            findHistory(no, name);
+            addRecord(no, j);
+            System.out.println("----------" + no + "----" + j);
         }
         if (doc != null) {
             try {
@@ -299,19 +362,16 @@ public class MarketService {
                     for (int i = 2; i < elements.size(); i++) {
                         String[] array = elements.get(i).text().split(" ");
                         time = Integer.parseInt(array[0].replaceAll("-", ""));
-                        if (time <= 20141216) {
-                            continue;
-                        }
-                        Records records = new Records();
-                        records.setTime(time);
-                        records.setName(name);
+                        MACDRecords records = new MACDRecords();
                         records.setNo(no);
-                        records.setToday_open(new BigDecimal(array[1]));
-                        records.setHeightest(new BigDecimal(array[2]));
-                        records.setCurrentPrice(new BigDecimal(array[3]));
+                        records.setOpen(new BigDecimal(array[1]));
+                        records.setHighest(new BigDecimal(array[2]));
+                        records.setPrice(new BigDecimal(array[3]));
                         records.setLowest(new BigDecimal(array[4]));
                         records.setDeal(new BigDecimal(array[5]));
-                        recordsDao.save(records);
+                        records.setDealMoney(new BigDecimal(array[6]));
+                        records.setTime(time);
+                        macdRecordsDao.save(records);
                     }
                 }
             } catch (Exception e) {
@@ -326,24 +386,5 @@ public class MarketService {
     public List<Market> findMarket(int page) {
         Page<Market> p = marketDao.findAll(new PageRequest(page - 1, pageSize));
         return p.getContent();
-    }
-
-
-    public void findLimitByNo() {
-        List<Records> list = recordsDao.findLimitByNo("000001", new PageRequest(0, 26, new Sort(new Sort.Order(Sort.Direction.DESC, "time")))).getContent();
-        if (list.size() == 26) {
-            BigDecimal ema26 = BigDecimal.ZERO;//ema12数据
-            BigDecimal ema12 = BigDecimal.ZERO;//ema26数据
-            BigDecimal day26 = new BigDecimal(351);
-            BigDecimal day12 = new BigDecimal(78);
-            for (int i = list.size() - 1; i >= 0; i--) {
-                ema26 = ema26.add((new BigDecimal(i + 1).divide(day26, 4, 4)).multiply(list.get(i).getCurrentPrice()));
-                if (i <= 11) {
-                    ema12 = ema12.add((new BigDecimal(i + 1).divide(day12, 4, 4)).multiply(list.get(i).getCurrentPrice()));
-                }
-                System.out.println(list.get(i).getCurrentPrice());
-            }
-            System.out.println("计算结果:" + ema12.subtract(ema26).toString());
-        }
     }
 }

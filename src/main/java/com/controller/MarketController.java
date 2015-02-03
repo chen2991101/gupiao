@@ -112,6 +112,23 @@ public class MarketController {
     }
 
     /**
+     * 计算macd
+     */
+    @RequestMapping(value = "macd", produces = Utils.textutf8)
+    @ResponseBody
+    public String macd() {
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                marketService.macd();
+            }
+        }).start();
+
+        return "正在添加记录";
+    }
+
+    /**
      * 添加股票信息
      *
      * @param isSh 是否是上海的股票
@@ -123,12 +140,5 @@ public class MarketController {
                 marketService.addMarket(isSh);
             }
         }).start();
-    }
-
-
-    @RequestMapping(value = "findLimit", produces = Utils.textutf8)
-    @ResponseBody
-    public void findLimit() {
-        marketService.findLimitByNo();
     }
 }
