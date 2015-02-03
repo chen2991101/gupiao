@@ -287,8 +287,16 @@ public class MarketService {
      * 计算macd
      */
     public void macd() {
+        long count = marketDao.count();
+        int sumPage = (int) (count / pageSize + (count % pageSize > 0 ? 1 : 0));// 总页数
+        int c = sumPage / 4;// 每页的条数
+        new MACDAble(this, c, 1).start();
+        new MACDAble(this, c, 1 + c).start();
+        new MACDAble(this, c, 1 + 2 * c).start();
+        new MACDAble(this, c, 1 + 3 * c).start();
+        new MACDAble(this, (int) (sumPage - 4 * c), 1 + 4 * c).start();
 
-        BigDecimal a11_13 = new BigDecimal(11).divide(new BigDecimal(13), 4, 4);
+/*        BigDecimal a11_13 = new BigDecimal(11).divide(new BigDecimal(13), 4, 4);
         BigDecimal a2_10 = new BigDecimal(2).divide(new BigDecimal(10), 4, 4);
         BigDecimal a8_10 = new BigDecimal(8).divide(new BigDecimal(10), 4, 4);
         BigDecimal a2_13 = new BigDecimal(2).divide(new BigDecimal(13), 4, 4);
@@ -330,6 +338,16 @@ public class MarketService {
                 }
                 macdDao.save(macDlist);
             }
+        }*/
+    }
+
+    public List<MACDRecords> findMacdRecordsByNo(String no) {
+        return macdRecordsDao.findByNo(no, new Sort(new Sort.Order("time")));
+    }
+
+    public void addMACDRecords(List<MACD> list) {
+        if (list.size() > 0) {
+            macdDao.save(list);
         }
     }
 
@@ -344,7 +362,7 @@ public class MarketService {
         }
 
         try {
-            doc = Jsoup.connect(url).timeout(5000).get();
+            doc = Jsoup.connect(url).timeout(9000).get();
         } catch (IOException e) {
             addRecord(no, j);
             System.out.println("----------" + no + "----" + j);

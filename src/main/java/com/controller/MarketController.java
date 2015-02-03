@@ -118,12 +118,7 @@ public class MarketController {
     @ResponseBody
     public String macd() {
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                marketService.macd();
-            }
-        }).start();
+        marketService.macd();
 
         return "正在添加记录";
     }
