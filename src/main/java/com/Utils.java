@@ -131,4 +131,50 @@ public class Utils {
         }
         return date;
     }
+
+
+/*        Records h = new Records();
+        h.setName(array[1]);
+        h.setNo(array[2]);
+        h.setCurrentPrice(new BigDecimal(array[3]));
+        h.setYesterday_income(new BigDecimal(array[4]));
+        h.setToday_open(new BigDecimal(array[5]));
+        h.setDeal(new BigDecimal(array[6]));
+        h.setOut_dish(Integer.parseInt(array[7]));
+        h.setIn_dish(Integer.parseInt(array[8]));
+        h.setBuy1(new BigDecimal(array[9]));
+        h.setBuy1l(Float.parseFloat(array[10]));
+        h.setBuy2(new BigDecimal(array[11]));
+        h.setBuy2l(Float.parseFloat(array[12]));
+        h.setBuy3(new BigDecimal(array[13]));
+        h.setBuy3l(Float.parseFloat(array[14]));
+        h.setBuy4(new BigDecimal(array[15]));
+        h.setBuy4l(Float.parseFloat(array[16]));
+        h.setBuy5(new BigDecimal(array[17]));
+        h.setBuy5l(Float.parseFloat(array[18]));
+        h.setSale1(new BigDecimal(array[19]));
+        h.setSale1l(Float.parseFloat(array[20]));
+        h.setSale2(new BigDecimal(array[21]));
+        h.setSale2l(Float.parseFloat(array[22]));
+        h.setSale3(new BigDecimal(array[23]));
+        h.setSale3l(Float.parseFloat(array[24]));
+        h.setSale4(new BigDecimal(array[25]));
+        h.setSale4l(Float.parseFloat(array[26]));
+        h.setSale5(new BigDecimal(array[27]));
+        h.setSale5l(Float.parseFloat(array[28]));
+        h.setTime(Integer.parseInt(array[30].substring(0, 8)));
+        h.setUpanddown(new BigDecimal(array[31]));
+        h.setUpanddown2(Float.parseFloat(array[32]));
+        h.setHeightest(new BigDecimal(array[33]));
+        h.setLowest(new BigDecimal(array[34]));
+        h.setDealAmount(new BigDecimal(array[37]));
+        h.setHandover(Float.parseFloat(array[38].length() == 0 ? "0" : array[38]));
+        h.setPe(Float.parseFloat(array[39].length() == 0 ? "0" : array[39]));
+        h.setZf(Float.parseFloat(array[43]));
+        h.setLtsz(array[44].length() == 0 ? BigDecimal.ZERO : new BigDecimal(array[44]));
+        h.setTotalMoney(array[45].length() == 0 ? BigDecimal.ZERO : new BigDecimal(array[45]));
+        h.setSjl(Float.parseFloat(array[46].length() == 0 ? "0" : array[46]));
+        h.setZtj(new BigDecimal(array[47]));
+        h.setDtj(new BigDecimal(array[48]));
+        recordsDao.save(h);*/
 }

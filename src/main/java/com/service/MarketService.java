@@ -28,7 +28,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -49,6 +48,15 @@ public class MarketService {
     MACDDao macdDao;
     private int pageSize = 10;
     private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
+    private PageRequest pageRequest = new PageRequest(0, 1, new Sort(new Sort.Order(Sort.Direction.DESC, "time")));
+
+    private BigDecimal a11_13 = new BigDecimal(11).divide(new BigDecimal(13), 3, 4);
+    private BigDecimal a2_10 = new BigDecimal(2).divide(new BigDecimal(10), 3, 4);
+    private BigDecimal a8_10 = new BigDecimal(8).divide(new BigDecimal(10), 3, 4);
+    private BigDecimal a2_13 = new BigDecimal(2).divide(new BigDecimal(13), 3, 4);
+    private BigDecimal a25_27 = new BigDecimal(25).divide(new BigDecimal(27), 3, 4);
+    private BigDecimal a2_27 = new BigDecimal(2).divide(new BigDecimal(27), 3, 4);
+    private BigDecimal two = new BigDecimal(2);
 
 
     /**
@@ -157,10 +165,8 @@ public class MarketService {
             long count = marketDao.count();//所有股票的数量
             int sumPage = (int) (count / pageSize + (count % pageSize > 0 ? 1 : 0));// 总页数
             List<Market> list;
-            int index = 0;
             String query = "";
             for (int i = 0; i < sumPage; i++) {
-                index = 0;
                 list = marketDao.findAll(new PageRequest(i, pageSize)).getContent();//获取当前页的数据
                 for (int j = 0; j < list.size(); j++) {
                     if (j == 0) {
@@ -194,7 +200,14 @@ public class MarketService {
             HttpResponse response = httpClient.execute(method);
             String context = Utils.inputStream2String(response.getEntity()
                     .getContent());// 获取的信息
-            save(context.trim());// 分割数据
+
+            String[] array = context.trim().split(";");
+            for (String st : array) {
+                if (st.indexOf("\"") != -1) {
+                    // 如果没有引号说明没有数据
+                    addRecords(st.trim());// 如果是任务调度的话保存到任务调度中
+                }
+            }
             return method;
         } catch (Exception e) {
             e.printStackTrace();
@@ -202,17 +215,6 @@ public class MarketService {
         }
         return null;
     }
-
-    private void save(String str) {
-        String[] array = str.split(";");
-        for (String st : array) {
-            if (st.indexOf("\"") != -1) {
-                // 如果没有引号说明没有数据
-                addRecords(st.trim());// 如果是任务调度的话保存到任务调度中
-            }
-        }
-    }
-
 
     /**
      * 添加记录
@@ -222,50 +224,40 @@ public class MarketService {
     @Transactional
     public void addRecords(String str) {
         String[] array = str.split("~");
-        Records h = new Records();
-        h.setName(array[1]);
-        h.setNo(array[2]);
-        h.setCurrentPrice(new BigDecimal(array[3]));
-        h.setYesterday_income(new BigDecimal(array[4]));
-        h.setToday_open(new BigDecimal(array[5]));
-        h.setDeal(new BigDecimal(array[6]));
-        h.setOut_dish(Integer.parseInt(array[7]));
-        h.setIn_dish(Integer.parseInt(array[8]));
-        h.setBuy1(new BigDecimal(array[9]));
-        h.setBuy1l(Float.parseFloat(array[10]));
-        h.setBuy2(new BigDecimal(array[11]));
-        h.setBuy2l(Float.parseFloat(array[12]));
-        h.setBuy3(new BigDecimal(array[13]));
-        h.setBuy3l(Float.parseFloat(array[14]));
-        h.setBuy4(new BigDecimal(array[15]));
-        h.setBuy4l(Float.parseFloat(array[16]));
-        h.setBuy5(new BigDecimal(array[17]));
-        h.setBuy5l(Float.parseFloat(array[18]));
-        h.setSale1(new BigDecimal(array[19]));
-        h.setSale1l(Float.parseFloat(array[20]));
-        h.setSale2(new BigDecimal(array[21]));
-        h.setSale2l(Float.parseFloat(array[22]));
-        h.setSale3(new BigDecimal(array[23]));
-        h.setSale3l(Float.parseFloat(array[24]));
-        h.setSale4(new BigDecimal(array[25]));
-        h.setSale4l(Float.parseFloat(array[26]));
-        h.setSale5(new BigDecimal(array[27]));
-        h.setSale5l(Float.parseFloat(array[28]));
-        h.setTime(Integer.parseInt(array[30].substring(0, 8)));
-        h.setUpanddown(new BigDecimal(array[31]));
-        h.setUpanddown2(Float.parseFloat(array[32]));
-        h.setHeightest(new BigDecimal(array[33]));
-        h.setLowest(new BigDecimal(array[34]));
-        h.setDealAmount(new BigDecimal(array[37]));
-        h.setHandover(Float.parseFloat(array[38].length() == 0 ? "0" : array[38]));
-        h.setPe(Float.parseFloat(array[39].length() == 0 ? "0" : array[39]));
-        h.setZf(Float.parseFloat(array[43]));
-        h.setLtsz(array[44].length() == 0 ? BigDecimal.ZERO : new BigDecimal(array[44]));
-        h.setTotalMoney(array[45].length() == 0 ? BigDecimal.ZERO : new BigDecimal(array[45]));
-        h.setSjl(Float.parseFloat(array[46].length() == 0 ? "0" : array[46]));
-        h.setZtj(new BigDecimal(array[47]));
-        h.setDtj(new BigDecimal(array[48]));
-        recordsDao.save(h);
+        float upanddown2 = Float.parseFloat(array[32]);//股票当天的涨幅
+        BigDecimal deal = new BigDecimal(array[6]);//交易量
+        if (upanddown2 != 0 && deal.compareTo(BigDecimal.ZERO) != 0) {
+            //当天没有停盘
+            MACDRecords macdRecords = new MACDRecords();
+            macdRecords.setNo(array[2]);
+            macdRecords.setOpen(new BigDecimal(array[5]));//今开盘
+            macdRecords.setHighest(new BigDecimal(array[33]));
+            macdRecords.setLowest(new BigDecimal(array[34]));
+            macdRecords.setPrice(new BigDecimal(array[3]));//当前价格
+            macdRecords.setDeal(new BigDecimal(array[6]));//交易量
+            macdRecords.setDealMoney(new BigDecimal(array[37]));//成交金额
+            macdRecords.setTime(Integer.parseInt(array[30].substring(0, 8)));
+            macdRecordsDao.save(macdRecords);
+            //保存成功，添加macd
+            addMacd(macdRecords.getNo(), macdRecords.getTime(), macdRecords.getPrice());
+        }
+    }
+
+    @Transactional
+    public void addMacd(String no, int time, BigDecimal price) {
+        List<MACD> list = macdDao.findByNo(no, pageRequest).getContent();
+        if (list.size() == 1) {
+            MACD oldMacd = list.get(0);
+            MACD macd = new MACD();
+            macd.setTime(time);
+            macd.setNo(no);
+            macd.setEma12(oldMacd.getEma12().multiply(a11_13).add(price.multiply(a2_13)));
+            macd.setEma26(oldMacd.getEma26().multiply(a25_27).add(price.multiply(a2_27)));
+            macd.setDiff(macd.getEma12().subtract(macd.getEma26()));
+            macd.setDea(oldMacd.getDea().multiply(a8_10).add(macd.getDiff().multiply(a2_10)));
+            macd.setBar((macd.getDiff().subtract(macd.getDea())).multiply(two));
+            macdDao.save(macd);
+        }
     }
 
 
@@ -295,50 +287,6 @@ public class MarketService {
         new MACDAble(this, c, 1 + 2 * c).start();
         new MACDAble(this, c, 1 + 3 * c).start();
         new MACDAble(this, (int) (sumPage - 4 * c), 1 + 4 * c).start();
-
-/*        BigDecimal a11_13 = new BigDecimal(11).divide(new BigDecimal(13), 4, 4);
-        BigDecimal a2_10 = new BigDecimal(2).divide(new BigDecimal(10), 4, 4);
-        BigDecimal a8_10 = new BigDecimal(8).divide(new BigDecimal(10), 4, 4);
-        BigDecimal a2_13 = new BigDecimal(2).divide(new BigDecimal(13), 4, 4);
-        BigDecimal a25_27 = new BigDecimal(25).divide(new BigDecimal(27), 4, 4);
-        BigDecimal a2_27 = new BigDecimal(2).divide(new BigDecimal(27), 4, 4);
-        BigDecimal two = new BigDecimal(2);
-        List<MACD> macDlist = new ArrayList<MACD>();
-        MACD oldMacd = null;//前一天的macd
-
-        long count = marketDao.count();//所有股票的数量
-        int sumPage = (int) (count / pageSize + (count % pageSize > 0 ? 1 : 0));// 总页数
-        List<Market> markets;
-        for (int j = 0; j < sumPage; j++) {
-
-            markets = marketDao.findAll(new PageRequest(j, pageSize)).getContent();//获取当前页的数据
-            for (Market market : markets) {
-
-                List<MACDRecords> list = macdRecordsDao.findByNo(market.getNo().substring(2), new Sort(new Sort.Order("time")));
-                for (int i = 1; i < list.size(); i++) {
-                    MACD macd = new MACD();
-                    macd.setTime(list.get(i).getTime());
-                    macd.setNo(list.get(i).getNo());
-                    if (i == 1) {
-                        macd.setEma12((list.get(1).getPrice().subtract(list.get(0).getPrice())).multiply(a2_13).add(list.get(0).getPrice()));
-                        macd.setEma26((list.get(1).getPrice().subtract(list.get(0).getPrice())).multiply(a2_27).add(list.get(0).getPrice()));
-                    } else {
-                        oldMacd = macDlist.get(macDlist.size() - 1);
-                        macd.setEma12(oldMacd.getEma12().multiply(a11_13).add(list.get(i).getPrice().multiply(a2_13)));
-                        macd.setEma26(oldMacd.getEma26().multiply(a25_27).add(list.get(i).getPrice().multiply(a2_27)));
-                    }
-                    macd.setDiff(macd.getEma12().subtract(macd.getEma26()));
-                    if (i == 1) {
-                        macd.setDea(macd.getDiff().multiply(a2_10));
-                    } else {
-                        macd.setDea(oldMacd.getDea().multiply(a8_10).add(macd.getDiff().multiply(a2_10)));
-                    }
-                    macd.setBAR((macd.getDiff().subtract(macd.getDea())).multiply(two));
-                    macDlist.add(macd);
-                }
-                macdDao.save(macDlist);
-            }
-        }*/
     }
 
     public List<MACDRecords> findMacdRecordsByNo(String no) {
@@ -365,7 +313,6 @@ public class MarketService {
             doc = Jsoup.connect(url).timeout(9000).get();
         } catch (IOException e) {
             addRecord(no, j);
-            System.out.println("----------" + no + "----" + j);
         }
         if (doc != null) {
             try {

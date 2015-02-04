@@ -3,8 +3,6 @@ package com.service;
 import com.entity.MACD;
 import com.entity.MACDRecords;
 import com.entity.Market;
-import org.apache.poi.util.SystemOutLogger;
-import org.springframework.data.domain.Sort;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -57,7 +55,7 @@ public class MACDAble extends Thread {
                     } else {
                         macd.setDea(oldMacd.getDea().multiply(a8_10).add(macd.getDiff().multiply(a2_10)));
                     }
-                    macd.setBAR((macd.getDiff().subtract(macd.getDea())).multiply(two));
+                    macd.setBar((macd.getDiff().subtract(macd.getDea())).multiply(two));
                     macdList.add(macd);
                 }
                 service.addMACDRecords(macdList);

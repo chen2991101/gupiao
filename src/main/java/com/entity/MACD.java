@@ -16,7 +16,7 @@ public class MACD extends BaseEntity {
     private BigDecimal ema26;
     private BigDecimal diff;
     private BigDecimal dea;
-    private BigDecimal BAR;
+    private BigDecimal bar;
     private String no;
     private int time;
 
@@ -56,16 +56,16 @@ public class MACD extends BaseEntity {
         return dea;
     }
 
+    public BigDecimal getBar() {
+        return bar;
+    }
+
+    public void setBar(BigDecimal bar) {
+        this.bar = bar;
+    }
+
     public void setDea(BigDecimal dea) {
         this.dea = dea;
-    }
-
-    public BigDecimal getBAR() {
-        return BAR;
-    }
-
-    public void setBAR(BigDecimal BAR) {
-        this.BAR = BAR;
     }
 
     public int getTime() {
