@@ -5,7 +5,7 @@ import com.dao.MACDDao;
 import com.dao.MACDRecordsDao;
 import com.dao.MarketDao;
 import com.dao.RecordsDao;
-import com.entity.MACD;
+import com.entity.Macd;
 import com.entity.MACDRecords;
 import com.entity.Market;
 import com.entity.Records;
@@ -28,6 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -245,10 +246,10 @@ public class MarketService {
 
     @Transactional
     public void addMacd(String no, int time, BigDecimal price) {
-        List<MACD> list = macdDao.findByNo(no, pageRequest).getContent();
+        List<Macd> list = macdDao.findByNo(no, pageRequest).getContent();
         if (list.size() == 1) {
-            MACD oldMacd = list.get(0);
-            MACD macd = new MACD();
+            Macd oldMacd = list.get(0);
+            Macd macd = new Macd();
             macd.setTime(time);
             macd.setNo(no);
             macd.setEma12(oldMacd.getEma12().multiply(a11_13).add(price.multiply(a2_13)));
@@ -293,7 +294,7 @@ public class MarketService {
         return macdRecordsDao.findByNo(no, new Sort(new Sort.Order("time")));
     }
 
-    public void addMACDRecords(List<MACD> list) {
+    public void addMACDRecords(List<Macd> list) {
         if (list.size() > 0) {
             macdDao.save(list);
         }
@@ -351,5 +352,15 @@ public class MarketService {
     public List<Market> findMarket(int page) {
         Page<Market> p = marketDao.findAll(new PageRequest(page - 1, pageSize));
         return p.getContent();
+    }
+
+    /**
+     * 获取macd金叉死叉的信息
+     *
+     * @return
+     */
+    public List<Macd> findMacd() {
+        List<Integer> list = macdDao.findTime(new PageRequest(0, 2, new Sort(new Sort.Order("diff"))));//获取最新的时间
+        return macdDao.findMacd(list.get(1), list.get(0));
     }
 }

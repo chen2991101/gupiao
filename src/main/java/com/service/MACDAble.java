@@ -1,6 +1,6 @@
 package com.service;
 
-import com.entity.MACD;
+import com.entity.Macd;
 import com.entity.MACDRecords;
 import com.entity.Market;
 
@@ -31,14 +31,14 @@ public class MACDAble extends Thread {
 
     @Override
     public void run() {
-        MACD oldMacd = null;//前一天的macd
+        Macd oldMacd = null;//前一天的macd
         for (int j = page; j < page + size; j++) {
             list = service.findMarket(j);
             for (Market market : list) {
-                List<MACD> macdList = new ArrayList<MACD>();
+                List<Macd> macdList = new ArrayList<Macd>();
                 List<MACDRecords> list = service.findMacdRecordsByNo(market.getNo().substring(2));
                 for (int i = 1; i < list.size(); i++) {
-                    MACD macd = new MACD();
+                    Macd macd = new Macd();
                     macd.setTime(list.get(i).getTime());
                     macd.setNo(list.get(i).getNo());
                     if (i == 1) {

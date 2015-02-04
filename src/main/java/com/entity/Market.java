@@ -21,6 +21,15 @@ public class Market extends BaseEntity {
 
     private String name;
     private String no;
+    private String n;
+
+    public String getN() {
+        return n;
+    }
+
+    public void setN(String n) {
+        this.n = n;
+    }
 
     public String getName() {
         return name;

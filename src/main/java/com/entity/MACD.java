@@ -11,7 +11,22 @@ import java.math.BigDecimal;
  */
 @Entity
 @Table(name = "tb_macd")
-public class MACD extends BaseEntity {
+public class Macd extends BaseEntity {
+
+    public Macd() {
+    }
+
+    public Macd(int time) {
+        this.time = time;
+    }
+
+    public Macd(String no, BigDecimal diff, int time, String error) {
+        this.time = time;
+        this.no = no;
+        this.diff = diff;
+        super.error = error;
+    }
+
     private BigDecimal ema12;
     private BigDecimal ema26;
     private BigDecimal diff;

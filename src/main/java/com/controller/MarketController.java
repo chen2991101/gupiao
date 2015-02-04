@@ -117,10 +117,17 @@ public class MarketController {
     @RequestMapping(value = "macd", produces = Utils.textutf8)
     @ResponseBody
     public String macd() {
-
         marketService.macd();
-
         return "正在添加记录";
+    }
+
+    /**
+     * 查询获取的macd的金叉死叉
+     */
+    @RequestMapping(value = "findMacd", produces = Utils.textutf8)
+    @ResponseBody
+    public String findMacd() {
+        return JSONObject.toJSONString(marketService.findMacd());
     }
 
     /**
