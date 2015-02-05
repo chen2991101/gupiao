@@ -1,14 +1,8 @@
 package com.service;
 
 import com.Utils;
-import com.dao.MACDDao;
-import com.dao.MACDRecordsDao;
-import com.dao.MarketDao;
-import com.dao.RecordsDao;
-import com.entity.Macd;
-import com.entity.MACDRecords;
-import com.entity.Market;
-import com.entity.Records;
+import com.dao.*;
+import com.entity.*;
 import org.apache.commons.collections.map.HashedMap;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -28,10 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 操作股票的service
@@ -45,6 +36,8 @@ public class MarketService {
     RecordsDao recordsDao;
     @Autowired
     MACDRecordsDao macdRecordsDao;
+    @Autowired
+    TimeDao timeDao;
     @Autowired
     MACDDao macdDao;
     private int pageSize = 10;
@@ -161,8 +154,15 @@ public class MarketService {
      * 添加股票行情
      */
     public void addRecords() {
-        if (dateFormat.format(new Date()).equals(Utils.getGuPiaoDate())) {
+        String time = dateFormat.format(new Date());
+        if (time.equals(Utils.getGuPiaoDate())) {
             // 如果进来有行情才获取数据
+            //先添加时间
+            List<Time> times = timeDao.findByTime(Integer.parseInt(time));
+            if (times.size() == 0) {
+                timeDao.save(new Time(Integer.parseInt(time)));
+            }
+
             long count = marketDao.count();//所有股票的数量
             int sumPage = (int) (count / pageSize + (count % pageSize > 0 ? 1 : 0));// 总页数
             List<Market> list;
@@ -360,7 +360,39 @@ public class MarketService {
      * @return
      */
     public List<Macd> findMacd() {
-        List<Integer> list = macdDao.findTime(new PageRequest(0, 2, new Sort(new Sort.Order("diff"))));//获取最新的时间
-        return macdDao.findMacd(list.get(1), list.get(0));
+
+        List<Integer> times = timeDao.findTime(new PageRequest(0, 2, new Sort(new Sort.Order(Sort.Direction.DESC, "time"))));
+
+        List<Macd> old = macdDao.findDiffLtDea(times.get(1));
+        Map<String, Macd> map = new HashMap<String, Macd>();
+        for (Macd macd : old) {
+            map.put(macd.getNo(), macd);
+        }
+        old = null;
+        List<Macd> macds = new ArrayList<Macd>();
+        List<Macd> list = macdDao.findDiffBtDea(times.get(0));
+        for (Macd macd : list) {
+            if (map.get(macd.getNo()) != null) {
+                macds.add(macd);
+            }
+        }
+
+        for (Macd macd : macds) {
+            macd.setError(marketDao.findByN(macd.getNo()).getName());
+        }
+        Collections.sort(macds, new MyComparator());
+        return macds;
+    }
+
+
+    /**
+     * list排序
+     */
+    private class MyComparator implements Comparator {
+        public int compare(Object o1, Object o2) {
+            Macd s1 = (Macd) o1;
+            Macd s2 = (Macd) o2;
+            return s1.getDiff().compareTo(s2.getDiff());
+        }
     }
 }

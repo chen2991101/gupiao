@@ -15,8 +15,11 @@ public interface MACDDao extends PagingAndSortingRepository<Macd, String> {
 
     Page<Macd> findByNo(String no, Pageable pageable);
 
-    @Query("select new Macd(b.no,b.diff,b.time,m.name) FROM Macd a, Macd b,Market m WHERE m.n=a.no and a.no=b.no and a.time =?1 AND b.time =?2 and a.diff<a.dea  and b.diff>=b.dea order by b.diff")
-    List<Macd> findMacd(int time1, int time2);
+    @Query("FROM Macd r WHERE r.time =?1  and r.diff<r.dea")
+    List<Macd> findDiffLtDea(int time1);
+
+    @Query("FROM Macd r WHERE r.time =?1  and r.diff>r.dea")
+    List<Macd> findDiffBtDea(int time1);
 
     @Query("select m.time from Macd m group by m.time order by m.time desc")
     List<Integer> findTime(Pageable pageable);

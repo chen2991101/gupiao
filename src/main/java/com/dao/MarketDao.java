@@ -15,4 +15,6 @@ public interface MarketDao extends PagingAndSortingRepository<Market, String> {
     @Modifying
     @Query("delete from Market m where m.no=?1")
     int deleteBack(String no);
+
+    Market findByN(String n);
 }
