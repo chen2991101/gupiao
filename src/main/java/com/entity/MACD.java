@@ -20,20 +20,22 @@ public class Macd extends BaseEntity {
         this.time = time;
     }
 
-    public Macd(String no, BigDecimal diff, int time, String error) {
-        this.time = time;
-        this.no = no;
-        this.diff = diff;
-        super.error = error;
-    }
-
     private BigDecimal ema12;
     private BigDecimal ema26;
     private BigDecimal diff;
     private BigDecimal dea;
     private BigDecimal bar;
     private String no;
+    private String name;
     private int time;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 
     public String getNo() {
         return no;

@@ -1,7 +1,7 @@
 <component name="ArtifactManager">
-  <artifact type="exploded-war" name="gupiao:war exploded">
+  <artifact type="war" name="gupiao:war exploded">
     <output-path>$PROJECT_DIR$/target</output-path>
-    <root id="root">
+    <root id="archive" name="gupiao_war exploded.war">
       <element id="javaee-facet-resources" facet="gupiao/web/Web" />
       <element id="directory" name="WEB-INF">
         <element id="directory" name="classes">
