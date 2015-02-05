@@ -21,10 +21,17 @@ public class IndexController {
 
     @RequestMapping(value = "index", produces = Utils.textutf8)
     public void index(final HttpServletRequest request) {
+        String ip = request.getHeader("x-forwarded-for");
+        if (request.getHeader("x-forwarded-for") == null) {
+            ip = request.getRemoteAddr();
+        } else {
+            ip = ip.split(",")[0];
+        }
+        final String finalIp = ip;
         new Thread(new Runnable() {
             @Override
             public void run() {
-                ipService.addIp(request.getRemoteAddr());
+                ipService.addIp(finalIp);
             }
         }).start();
     }
@@ -35,4 +42,5 @@ public class IndexController {
     public String findRecords(int page, int rows) {
         return JSONObject.toJSONString(ipService.findIp(page, rows));
     }
+
 }
