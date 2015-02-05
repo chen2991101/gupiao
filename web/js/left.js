@@ -8,6 +8,6 @@ $(function () {
     });
 
     $('#macd').bind('click', function () {
-        addTabs('index_tab', 'macd', '/view/macd.html');
+        addTabs('index_tab', '金叉', '/view/macd.html');
     });
 });
