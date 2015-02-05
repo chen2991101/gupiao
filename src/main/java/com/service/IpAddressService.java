@@ -4,16 +4,23 @@ import com.Utils;
 import com.alibaba.fastjson.JSONObject;
 import com.dao.IpAddressDao;
 import com.entity.IpAddress;
+import com.entity.MACDRecords;
+import org.apache.commons.collections.map.HashedMap;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 /**
  * ip位置service
@@ -50,4 +57,20 @@ public class IpAddressService {
         }
     }
 
+
+    /**
+     * 查询所有的ip地址
+     *
+     * @param pageNo
+     * @param pageSize
+     * @return
+     */
+    public Map<String, Object> findIp(int pageNo, int pageSize) {
+        Map<String, Object> map = new HashedMap();
+        Page<IpAddress> page = ipAddressDao.
+                findAll(new PageRequest(pageNo - 1, pageSize, new Sort(new Sort.Order(Sort.Direction.DESC, "createDate"))));
+        map.put("total", page.getTotalElements());
+        map.put("rows", page.getContent());
+        return map;
+    }
 }

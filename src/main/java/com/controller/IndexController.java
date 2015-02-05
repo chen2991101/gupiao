@@ -1,10 +1,12 @@
 package com.controller;
 
 import com.Utils;
+import com.alibaba.fastjson.JSONObject;
 import com.service.IpAddressService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -25,5 +27,12 @@ public class IndexController {
                 ipService.addIp(request.getRemoteAddr());
             }
         }).start();
+    }
+
+
+    @RequestMapping(value = "findIp", produces = Utils.textutf8)
+    @ResponseBody
+    public String findRecords(int page, int rows) {
+        return JSONObject.toJSONString(ipService.findIp(page, rows));
     }
 }

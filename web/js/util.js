@@ -1,6 +1,6 @@
-var _fund_grid = null;// 账户信息
-var _warehouse_grid = null;// 仓库信息
-var _cargoInfo_tree = null;// 商品类型的tree
+var basrUrl = 'http://127.0.0.1';
+//var basrUrl = 'http://haogupiao.duapp.com';
+
 
 Date.prototype.Format = function(fmt) { // author: meizz
 	var o = {
