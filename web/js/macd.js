@@ -8,7 +8,7 @@ $(function () {
             striped: true,
             columns: [[
                 {field: 'no', title: '代码', width: 100, align: 'center'},
-                {field: 'error', title: '名称', width: 100, align: 'center'},
+                {field: 'name', title: '名称', width: 100, align: 'center'},
                 {field: 'diff', title: 'diff', width: 100, align: 'center'},
                 {
                     field: 'time',

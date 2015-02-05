@@ -14,6 +14,7 @@ import java.math.BigDecimal;
 public class MACDRecords extends BaseEntity {
 
     private String no;// 代码
+    private String name;//股票名称
     private BigDecimal open;//开盘价格
     private BigDecimal highest;//最高
     private BigDecimal lowest;//最低
@@ -21,6 +22,15 @@ public class MACDRecords extends BaseEntity {
     private BigDecimal deal;//交易量
     private BigDecimal dealMoney;//交易金额
     private int time;//时间
+
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 
     public String getNo() {
         return no;

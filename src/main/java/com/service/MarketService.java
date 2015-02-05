@@ -2,7 +2,10 @@ package com.service;
 
 import com.Utils;
 import com.dao.*;
-import com.entity.*;
+import com.entity.MACDRecords;
+import com.entity.Macd;
+import com.entity.Market;
+import com.entity.Time;
 import org.apache.commons.collections.map.HashedMap;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -61,8 +64,8 @@ public class MarketService {
      */
     public Map<String, Object> findRecords(int pageNo, int pageSize) {
         Map<String, Object> map = new HashedMap();
-        List<Integer> times = recordsDao.findTimes(new PageRequest(0, 1, new Sort(new Sort.Order(Sort.Direction.DESC, "time"))));//获取最新的时间
-        Page<Records> page = recordsDao.
+        List<Integer> times = timeDao.findTime(new PageRequest(0, 1, new Sort(new Sort.Order(Sort.Direction.DESC, "time"))));
+        Page<MACDRecords> page = macdRecordsDao.
                 findByTime(times.get(0), new PageRequest(pageNo - 1, pageSize, new Sort(new Sort.Order(Sort.Direction.DESC, "time"))));
         map.put("total", page.getTotalElements());
         map.put("rows", page.getContent());
@@ -231,6 +234,7 @@ public class MarketService {
             //当天没有停盘
             MACDRecords macdRecords = new MACDRecords();
             macdRecords.setNo(array[2]);
+            macdRecords.setName(array[1]);
             macdRecords.setOpen(new BigDecimal(array[5]));//今开盘
             macdRecords.setHighest(new BigDecimal(array[33]));
             macdRecords.setLowest(new BigDecimal(array[34]));
@@ -240,18 +244,19 @@ public class MarketService {
             macdRecords.setTime(Integer.parseInt(array[30].substring(0, 8)));
             macdRecordsDao.save(macdRecords);
             //保存成功，添加macd
-            addMacd(macdRecords.getNo(), macdRecords.getTime(), macdRecords.getPrice());
+            addMacd(macdRecords.getNo(), macdRecords.getName(), macdRecords.getTime(), macdRecords.getPrice());
         }
     }
 
     @Transactional
-    public void addMacd(String no, int time, BigDecimal price) {
+    public void addMacd(String no, String name, int time, BigDecimal price) {
         List<Macd> list = macdDao.findByNo(no, pageRequest).getContent();
         if (list.size() == 1) {
             Macd oldMacd = list.get(0);
             Macd macd = new Macd();
             macd.setTime(time);
             macd.setNo(no);
+            macd.setName(name);
             macd.setEma12(oldMacd.getEma12().multiply(a11_13).add(price.multiply(a2_13)));
             macd.setEma26(oldMacd.getEma26().multiply(a25_27).add(price.multiply(a2_27)));
             macd.setDiff(macd.getEma12().subtract(macd.getEma26()));
@@ -375,10 +380,6 @@ public class MarketService {
             if (map.get(macd.getNo()) != null) {
                 macds.add(macd);
             }
-        }
-
-        for (Macd macd : macds) {
-            macd.setError(marketDao.findByN(macd.getNo()).getName());
         }
         Collections.sort(macds, new MyComparator());
         return macds;
