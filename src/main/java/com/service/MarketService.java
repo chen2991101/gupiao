@@ -19,9 +19,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.criteria.*;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
@@ -62,11 +64,25 @@ public class MarketService {
      * @param pageNo   页数
      * @param pageSize 每页的条数
      */
-    public Map<String, Object> findRecords(int pageNo, int pageSize) {
+    public Map<String, Object> findRecords(int pageNo, int pageSize, final String q) {
         Map<String, Object> map = new HashedMap();
-        List<Integer> times = timeDao.findTime(new PageRequest(0, 1, new Sort(new Sort.Order(Sort.Direction.DESC, "time"))));
-        Page<MACDRecords> page = macdRecordsDao.
-                findByTime(times.get(0), new PageRequest(pageNo - 1, pageSize, new Sort(new Sort.Order(Sort.Direction.DESC, "time"))));
+        final List<Integer> times = timeDao.findTime(new PageRequest(0, 1, new Sort(new Sort.Order(Sort.Direction.DESC, "time"))));
+
+        Page<MACDRecords> page = macdRecordsDao.findAll(new Specification<MACDRecords>() {
+            @Override
+            public Predicate toPredicate(Root<MACDRecords> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+                Predicate predicate = cb.conjunction();
+                List<Expression<Boolean>> expressions = predicate.getExpressions();
+                expressions.add(cb.equal(root.<Integer>get("time"), times.get(0)));
+                if ((null != q) && !q.equals("")) {
+                    //用户名
+                    expressions.add(cb.or(cb.like(root.<String>get("no"), "%" + q + "%"), cb.like(root.<String>get("name"), "%" + q + "%")));
+                }
+                return predicate;
+            }
+        }, new PageRequest(pageNo - 1, pageSize, new Sort(new Sort.Order(Sort.Direction.DESC, "time"))));
+
+
         map.put("total", page.getTotalElements());
         map.put("rows", page.getContent());
         return map;

@@ -1,5 +1,17 @@
 $(function () {
-        $('#market_table').datagrid({
+        var grid = $('#market_table');
+
+        $('#market_toolbar_search').searchbox({
+            prompt: '股票代码或名称',
+            searcher: function (value, name) {
+                grid.datagrid('load', {
+                    query: value
+                });
+            }
+        });
+
+
+        grid.datagrid({
             url: basrUrl + "/market/findRecords.do",
             rownumbers: true,
             pagination: true,
@@ -8,6 +20,7 @@ $(function () {
             border: false,
             pageSize: 40,
             pageList: [40, 50, 60, 70],
+            toolbar: '#market_toolbar',
             rowStyler: function (index, row) {
                 if (row.upanddown > 0) {
                     return 'color:red;';

@@ -84,8 +84,8 @@ public class MarketController {
      */
     @RequestMapping(value = "findRecords", produces = Utils.textutf8)
     @ResponseBody
-    public String findRecords(int page, int rows) {
-        return JSONObject.toJSONString(marketService.findRecords(page, rows));
+    public String findRecords(int page, int rows, String query) {
+        return JSONObject.toJSONString(marketService.findRecords(page, rows, query));
     }
 
     /**
