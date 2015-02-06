@@ -21,9 +21,14 @@ $(function () {
             columns: [[
                 {field: 'no', title: '代码', width: 100, align: 'center'},
                 {field: 'name', title: '名称', width: 100, align: 'center'},
-                {field: 'price', title: '价格', width: 100, align: 'center'},
+                {field: 'price', title: '收盘价', width: 100, align: 'center'},
                 {field: 'upanddown', title: '涨幅', width: 100, align: 'center'},
-                {field: 'upanddown2', title: '涨幅(%)', width: 100, align: 'center'},
+                {
+                    field: 'upanddown2', title: '涨幅(%)', width: 100, align: 'center',
+                    formatter: function (value, rowData, rowIndex) {
+                        return value + "%";
+                    }
+                },
                 {field: 'open', title: '开盘价', width: 100, align: 'center'},
                 {field: 'highest', title: '最高', width: 100, align: 'center'},
                 {field: 'lowest', title: '最低', width: 100, align: 'center'},
