@@ -242,6 +242,12 @@ public class MarketService {
             macdRecords.setDeal(new BigDecimal(array[6]));//交易量
             macdRecords.setDealMoney(new BigDecimal(array[37]));//成交金额
             macdRecords.setTime(Integer.parseInt(array[30].substring(0, 8)));
+
+            macdRecords.setOut_dish(Long.parseLong(array[7]));//外盘
+            macdRecords.setIn_dish(Long.parseLong(array[8]));//内盘
+            macdRecords.setUpanddown(new BigDecimal(array[31]));//涨幅
+            macdRecords.setUpanddown2(Float.parseFloat(array[32]));//涨幅比
+
             macdRecordsDao.save(macdRecords);
             //保存成功，添加macd
             addMacd(macdRecords.getNo(), macdRecords.getName(), macdRecords.getTime(), macdRecords.getPrice());

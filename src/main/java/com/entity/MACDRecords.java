@@ -21,6 +21,11 @@ public class MACDRecords extends BaseEntity {
     private BigDecimal price;//收盘价
     private BigDecimal deal;//交易量
     private BigDecimal dealMoney;//交易金额
+    private BigDecimal upanddown;// 涨跌 31
+    private float upanddown2;// 涨跌% 32
+    private long out_dish;// 外盘 7
+    private long in_dish;// 内盘 8
+
     private int time;//时间
 
 
@@ -94,5 +99,37 @@ public class MACDRecords extends BaseEntity {
 
     public void setTime(int time) {
         this.time = time;
+    }
+
+    public BigDecimal getUpanddown() {
+        return upanddown;
+    }
+
+    public void setUpanddown(BigDecimal upanddown) {
+        this.upanddown = upanddown;
+    }
+
+    public float getUpanddown2() {
+        return upanddown2;
+    }
+
+    public void setUpanddown2(float upanddown2) {
+        this.upanddown2 = upanddown2;
+    }
+
+    public long getOut_dish() {
+        return out_dish;
+    }
+
+    public void setOut_dish(long out_dish) {
+        this.out_dish = out_dish;
+    }
+
+    public long getIn_dish() {
+        return in_dish;
+    }
+
+    public void setIn_dish(long in_dish) {
+        this.in_dish = in_dish;
     }
 }

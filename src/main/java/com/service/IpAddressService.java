@@ -3,8 +3,9 @@ package com.service;
 import com.Utils;
 import com.alibaba.fastjson.JSONObject;
 import com.dao.IpAddressDao;
+import com.dao.TimeDao;
 import com.entity.IpAddress;
-import com.entity.MACDRecords;
+import com.entity.Time;
 import org.apache.commons.collections.map.HashedMap;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -15,11 +16,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -31,6 +32,8 @@ public class IpAddressService {
 
     @Autowired
     IpAddressDao ipAddressDao;
+    @Autowired
+    TimeDao timeDao;
     private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
 
     /**
