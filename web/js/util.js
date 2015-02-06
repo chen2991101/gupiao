@@ -21,33 +21,6 @@ Date.prototype.Format = function (fmt) { // author: meizz
     return fmt;
 };
 
-$.extend($.fn.validatebox.defaults.rules, {
-    password: {
-        validator: function (value, param) {
-            return $('#' + param[0]).find('input[name=password]').val() == value;
-        },
-        message: '两次密码必须一致'
-    },
-    combogrid: {
-        validator: function (value, param) {
-            var com = $('#' + param[0]);
-            return value != com.combogrid('getValue');
-        },
-        message: '只能选择下拉框中的值'
-    },
-    date: {
-        validator: function (value, param) {
-            var begin = $('#' + param[0]).datebox('getValue').replace(/\-/g, '') - 0;// 开始时间
-            var end = $('#' + param[1]).datebox('getValue').replace(/\-/g, '') - 0;// 结束时间
-            if (end == 0 || begin == 0) {
-                return true;
-            }
-            return begin < end;
-        },
-        message: '开始时间不能小于结束时间'
-    }
-});
-
 function progress_open() {
     // 打开进度条
     $.messager.progress({

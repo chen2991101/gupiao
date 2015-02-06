@@ -9,6 +9,15 @@
     <link rel="stylesheet" type="text/css" href="/easyUI/themes/icon.css">
     <script type="text/javascript" src="/easyUI/jquery.easyui.min.js"></script>
     <script type="text/javascript" src="/easyUI/locale/easyui-lang-zh_CN.js"></script>
+    <script>
+        $(function () {
+            $('#tab_home').panel({
+                href: '/view/home.html',
+                border: false,
+                fit: true
+            });
+        });
+    </script>
 </head>
 <body>
 <div class="easyui-layout" fit=true border=false>
@@ -17,8 +26,9 @@
     <div region="center" id="index_center"
          border=false>
         <div id="index_tab" class="easyui-tabs" fit=true border=false>
+            <div title="首页" id="tab_home">
+            </div>
         </div>
     </div>
-</div>
 </body>
 </html>
