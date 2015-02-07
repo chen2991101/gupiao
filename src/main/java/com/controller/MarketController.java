@@ -130,6 +130,7 @@ public class MarketController {
         return JSONObject.toJSONString(marketService.findMacd());
     }
 
+
     /**
      * 添加股票信息
      *

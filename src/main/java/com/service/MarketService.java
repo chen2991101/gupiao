@@ -407,7 +407,6 @@ public class MarketService {
         return macds;
     }
 
-
     /**
      * list排序
      */
