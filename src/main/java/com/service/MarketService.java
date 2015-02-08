@@ -57,6 +57,15 @@ public class MarketService {
     private BigDecimal a2_27 = new BigDecimal(2).divide(new BigDecimal(27), 3, 4);
     private BigDecimal two = new BigDecimal(2);
 
+    private BigDecimal max;
+    private BigDecimal min;
+    private BigDecimal c;
+    private BigDecimal rsv;
+    private BigDecimal a100 = new BigDecimal("100");
+    private BigDecimal a3 = new BigDecimal("3");
+    private BigDecimal a2 = new BigDecimal("2");
+    private BigDecimal a2_3 = new BigDecimal("2").divide(new BigDecimal("3"), 4, 4);
+
 
     /**
      * 获取股票记录
@@ -410,15 +419,52 @@ public class MarketService {
     /**
      * 添加kdj数据
      */
-    public void addKdj() {
-        long count = marketDao.count();
+    public void addKdj(int time) {
+/*        long count = marketDao.count();
         int sumPage = (int) (count / pageSize + (count % pageSize > 0 ? 1 : 0));// 总页数
         int c = sumPage / 4;// 每页的条数
         new KdjAble(this, c, 1).start();
         new KdjAble(this, c, 1 + c).start();
         new KdjAble(this, c, 1 + 2 * c).start();
         new KdjAble(this, c, 1 + 3 * c).start();
-        new KdjAble(this, (int) (sumPage - 4 * c), 1 + 4 * c).start();
+        new KdjAble(this, (int) (sumPage - 4 * c), 1 + 4 * c).start();*/
+
+        List<Market> list = (List<Market>) marketDao.findAll();//获取所有的股票
+        for (Market market : list) {
+            MACDRecords records = macdRecordsDao.findByNoAndTime(market.getN(), time);
+            if (records != null && !records.getNo().equals("600318")) {
+                Kdj kdj = new Kdj();
+                kdj.setNo(records.getNo());
+                kdj.setTime(time);
+                List<MACDRecords> l = findByNoAndTime(records.getNo(), records.getTime());
+                for (int k = 0; k < l.size(); k++) {
+                    MACDRecords m = l.get(k);
+                    if (k == 0) {
+                        max = m.getHighest();//最高价
+                        min = m.getLowest();//最低价
+                    } else {
+                        max = max.compareTo(m.getHighest()) < 0 ? m.getHighest() : max;
+                        min = min.compareTo(m.getLowest()) > 0 ? m.getLowest() : min;
+                    }
+                }
+                rsv = (records.getPrice().subtract(min)).divide(max.subtract(min), 4, 4).multiply(a100);
+                Kdj kk = kdjDao.findByNo(records.getNo(), pageRequest).getContent().get(0);
+                kdj.setK(kk.getK().multiply(a2_3).add(rsv.divide(a3, 2, 4)));
+                kdj.setD(kk.getD().multiply(a2_3).add(kdj.getK().divide(a3, 2, 4)));
+                kdj.setJ(a3.multiply(kdj.getK()).subtract(a2.multiply(kdj.getD())));
+
+                kdj.setK(kdj.getK().compareTo(a100) > 0 ? a100 : kdj.getK());
+                kdj.setD(kdj.getD().compareTo(a100) > 0 ? a100 : kdj.getD());
+                kdj.setJ(kdj.getJ().compareTo(a100) > 0 ? a100 : kdj.getJ());
+
+                kdj.setK(kdj.getK().compareTo(BigDecimal.ZERO) < 0 ? BigDecimal.ZERO : kdj.getK());
+                kdj.setD(kdj.getD().compareTo(BigDecimal.ZERO) < 0 ? BigDecimal.ZERO : kdj.getD());
+                kdj.setJ(kdj.getJ().compareTo(BigDecimal.ZERO) < 0 ? BigDecimal.ZERO : kdj.getJ());
+
+                kdjDao.save(kdj);
+            }
+        }
+        System.out.println("添加完毕");
     }
 
     @Transactional

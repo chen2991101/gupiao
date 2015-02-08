@@ -134,7 +134,12 @@ public class MarketController {
     @RequestMapping(value = "addKdj", produces = Utils.textutf8)
     @ResponseBody
     public String addKdj() {
-        marketService.addKdj();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                marketService.addKdj(20150206);
+            }
+        }).start();
         return "正在添加kdj";
     }
 
