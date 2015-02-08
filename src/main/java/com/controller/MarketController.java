@@ -131,6 +131,13 @@ public class MarketController {
     }
 
 
+    @RequestMapping(value = "addKdj", produces = Utils.textutf8)
+    @ResponseBody
+    public String addKdj() {
+        marketService.addKdj();
+        return "正在添加kdj";
+    }
+
     /**
      * 添加股票信息
      *

@@ -2,10 +2,7 @@ package com.service;
 
 import com.Utils;
 import com.dao.*;
-import com.entity.MACDRecords;
-import com.entity.Macd;
-import com.entity.Market;
-import com.entity.Time;
+import com.entity.*;
 import org.apache.commons.collections.map.HashedMap;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -44,10 +41,13 @@ public class MarketService {
     @Autowired
     TimeDao timeDao;
     @Autowired
+    KdjDao kdjDao;
+    @Autowired
     MACDDao macdDao;
     private int pageSize = 10;
     private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
     private PageRequest pageRequest = new PageRequest(0, 1, new Sort(new Sort.Order(Sort.Direction.DESC, "time")));
+    private PageRequest page9 = new PageRequest(0, 9, new Sort(new Sort.Order(Sort.Direction.DESC, "time")));
 
     private BigDecimal a11_13 = new BigDecimal(11).divide(new BigDecimal(13), 3, 4);
     private BigDecimal a2_10 = new BigDecimal(2).divide(new BigDecimal(10), 3, 4);
@@ -408,6 +408,29 @@ public class MarketService {
     }
 
     /**
+     * 添加kdj数据
+     */
+    public void addKdj() {
+        long count = marketDao.count();
+        int sumPage = (int) (count / pageSize + (count % pageSize > 0 ? 1 : 0));// 总页数
+        int c = sumPage / 4;// 每页的条数
+        new KdjAble(this, c, 1).start();
+        new KdjAble(this, c, 1 + c).start();
+        new KdjAble(this, c, 1 + 2 * c).start();
+        new KdjAble(this, c, 1 + 3 * c).start();
+        new KdjAble(this, (int) (sumPage - 4 * c), 1 + 4 * c).start();
+    }
+
+    @Transactional
+    public void saveKdj(Kdj kdj) {
+        kdjDao.save(kdj);
+    }
+
+    public List<MACDRecords> findByNoAndTime(String no, int time) {
+        return macdRecordsDao.findByNoAndTime(no, time, page9).getContent();
+    }
+
+    /**
      * list排序
      */
     private class MyComparator implements Comparator {
@@ -416,5 +439,10 @@ public class MarketService {
             Macd s2 = (Macd) o2;
             return s1.getDiff().compareTo(s2.getDiff());
         }
+    }
+
+
+    public List<MACDRecords> findByNoOrderByTime(String no) {
+        return macdRecordsDao.findByNoOrderByTimeAsc(no);
     }
 }
