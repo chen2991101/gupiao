@@ -49,13 +49,13 @@ public class MarketService {
     private PageRequest pageRequest = new PageRequest(0, 1, new Sort(new Sort.Order(Sort.Direction.DESC, "time")));
     private PageRequest page9 = new PageRequest(0, 9, new Sort(new Sort.Order(Sort.Direction.DESC, "time")));
 
-    private BigDecimal a11_13 = new BigDecimal(11).divide(new BigDecimal(13), 3, 4);
-    private BigDecimal a2_10 = new BigDecimal(2).divide(new BigDecimal(10), 3, 4);
-    private BigDecimal a8_10 = new BigDecimal(8).divide(new BigDecimal(10), 3, 4);
-    private BigDecimal a2_13 = new BigDecimal(2).divide(new BigDecimal(13), 3, 4);
-    private BigDecimal a25_27 = new BigDecimal(25).divide(new BigDecimal(27), 3, 4);
-    private BigDecimal a2_27 = new BigDecimal(2).divide(new BigDecimal(27), 3, 4);
-    private BigDecimal two = new BigDecimal(2);
+    BigDecimal a11_13 = new BigDecimal(11).divide(new BigDecimal(13), 4, 4);
+    BigDecimal a2_10 = new BigDecimal(2).divide(new BigDecimal(10), 4, 4);
+    BigDecimal a8_10 = new BigDecimal(8).divide(new BigDecimal(10), 4, 4);
+    BigDecimal a2_13 = new BigDecimal(2).divide(new BigDecimal(13), 4, 4);
+    BigDecimal a25_27 = new BigDecimal(25).divide(new BigDecimal(27), 4, 4);
+    BigDecimal a2_27 = new BigDecimal(2).divide(new BigDecimal(27), 4, 4);
+    BigDecimal two = new BigDecimal(2);
 
     private BigDecimal max;
     private BigDecimal min;
@@ -182,37 +182,49 @@ public class MarketService {
      * 添加股票行情
      */
     public void addRecords() {
-        String time = dateFormat.format(new Date());
-        if (time.equals(Utils.getGuPiaoDate())) {
-            // 如果进来有行情才获取数据
-            //先添加时间
-            List<Time> times = timeDao.findByTime(Integer.parseInt(time));
-            if (times.size() == 0) {
-                timeDao.save(new Time(Integer.parseInt(time)));
-            }
-
-            long count = marketDao.count();//所有股票的数量
-            int sumPage = (int) (count / pageSize + (count % pageSize > 0 ? 1 : 0));// 总页数
-            List<Market> list;
-            String query = "";
-            for (int i = 0; i < sumPage; i++) {
-                list = marketDao.findAll(new PageRequest(i, pageSize)).getContent();//获取当前页的数据
-                for (int j = 0; j < list.size(); j++) {
-                    if (j == 0) {
-                        query = list.get(j).getNo();
-                    } else {
-                        query += ("," + list.get(j).getNo());
-                    }
-                }
-                HttpGet method = httpClient(query);
-                if (method != null) {
-                    method.releaseConnection();
-                }
-            }
-            Utils.sendEMail("行情添加成功");
-        } else {
-            Utils.sendEMail("今天没有行情");
+        //final String time = dateFormat.format(new Date());
+        //if (time.equals(Utils.getGuPiaoDate())) {
+        // 如果进来有行情才获取数据
+        //先添加时间
+        final String time = Utils.getGuPiaoDate();
+        List<Time> times = timeDao.findByTime(Integer.parseInt(time));
+        if (times.size() == 0) {
+            timeDao.save(new Time(Integer.parseInt(time)));
         }
+
+        long count = marketDao.count();//所有股票的数量
+        int sumPage = (int) (count / pageSize + (count % pageSize > 0 ? 1 : 0));// 总页数
+        List<Market> list;
+        String query = "";
+        for (int i = 0; i < sumPage; i++) {
+            list = marketDao.findAll(new PageRequest(i, pageSize)).getContent();//获取当前页的数据
+            for (int j = 0; j < list.size(); j++) {
+                if (j == 0) {
+                    query = list.get(j).getNo();
+                } else {
+                    query += ("," + list.get(j).getNo());
+                }
+            }
+            HttpGet method = httpClient(query);
+            if (method != null) {
+                method.releaseConnection();
+            }
+        }
+
+        Utils.sendEMail("行情添加成功");
+
+        //添加kdj数据
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                addKdj(Integer.parseInt(time));
+            }
+        }).start();
+/*        } else
+
+        {
+            Utils.sendEMail("今天没有行情");
+        }*/
     }
 
 
@@ -288,11 +300,11 @@ public class MarketService {
             macd.setTime(time);
             macd.setNo(no);
             macd.setName(name);
-            macd.setEma12(oldMacd.getEma12().multiply(a11_13).add(price.multiply(a2_13)));
-            macd.setEma26(oldMacd.getEma26().multiply(a25_27).add(price.multiply(a2_27)));
-            macd.setDiff(macd.getEma12().subtract(macd.getEma26()));
-            macd.setDea(oldMacd.getDea().multiply(a8_10).add(macd.getDiff().multiply(a2_10)));
-            macd.setBar((macd.getDiff().subtract(macd.getDea())).multiply(two));
+            macd.setEma12(oldMacd.getEma12().multiply(a11_13).add(price.multiply(a2_13)).setScale(3, 4));
+            macd.setEma26(oldMacd.getEma26().multiply(a25_27).add(price.multiply(a2_27)).setScale(3, 4));
+            macd.setDiff(macd.getEma12().subtract(macd.getEma26()).setScale(3, 4));
+            macd.setDea(oldMacd.getDea().multiply(a8_10).add(macd.getDiff().multiply(a2_10)).setScale(3, 4));
+            macd.setBar((macd.getDiff().subtract(macd.getDea())).multiply(two).setScale(3, 4));
             macdDao.save(macd);
         }
     }
@@ -435,6 +447,7 @@ public class MarketService {
             if (records != null && !records.getNo().equals("600318")) {
                 Kdj kdj = new Kdj();
                 kdj.setNo(records.getNo());
+                kdj.setName(records.getName());
                 kdj.setTime(time);
                 List<MACDRecords> l = findByNoAndTime(records.getNo(), records.getTime());
                 for (int k = 0; k < l.size(); k++) {
@@ -485,6 +498,7 @@ public class MarketService {
             Macd s2 = (Macd) o2;
             return s1.getDiff().compareTo(s2.getDiff());
         }
+
     }
 
 
