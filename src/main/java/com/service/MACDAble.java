@@ -46,8 +46,8 @@ public class MACDAble extends Thread {
                         macd.setEma26((list.get(1).getPrice().subtract(list.get(0).getPrice())).multiply(a2_27).add(list.get(0).getPrice()).setScale(3, 4));
                     } else {
                         oldMacd = macdList.get(macdList.size() - 1);
-                        macd.setEma12(oldMacd.getEma12().multiply(a11_13).add(list.get(i).getPrice().multiply(a2_13)).setScale(3, 4));
-                        macd.setEma26(oldMacd.getEma26().multiply(a25_27).add(list.get(i).getPrice().multiply(a2_27)).setScale(3, 4));
+                        macd.setEma12(oldMacd.getEma12().multiply(a11_13).add(list.get(i).getPrice().multiply(a2_13)));
+                        macd.setEma26(oldMacd.getEma26().multiply(a25_27).add(list.get(i).getPrice().multiply(a2_27)));
                     }
                     macd.setDiff(macd.getEma12().subtract(macd.getEma26()));
                     if (i == 1) {

@@ -182,49 +182,47 @@ public class MarketService {
      * 添加股票行情
      */
     public void addRecords() {
-        //final String time = dateFormat.format(new Date());
-        //if (time.equals(Utils.getGuPiaoDate())) {
-        // 如果进来有行情才获取数据
-        //先添加时间
-        final String time = Utils.getGuPiaoDate();
-        List<Time> times = timeDao.findByTime(Integer.parseInt(time));
-        if (times.size() == 0) {
-            timeDao.save(new Time(Integer.parseInt(time)));
-        }
 
-        long count = marketDao.count();//所有股票的数量
-        int sumPage = (int) (count / pageSize + (count % pageSize > 0 ? 1 : 0));// 总页数
-        List<Market> list;
-        String query = "";
-        for (int i = 0; i < sumPage; i++) {
-            list = marketDao.findAll(new PageRequest(i, pageSize)).getContent();//获取当前页的数据
-            for (int j = 0; j < list.size(); j++) {
-                if (j == 0) {
-                    query = list.get(j).getNo();
-                } else {
-                    query += ("," + list.get(j).getNo());
+        final String time = dateFormat.format(new Date());
+        if (time.equals(Utils.getGuPiaoDate())) {
+            // 如果进来有行情才获取数据
+            //先添加时间
+            List<Time> times = timeDao.findByTime(Integer.parseInt(time));
+            if (times.size() == 0) {
+                timeDao.save(new Time(Integer.parseInt(time)));
+            }
+
+            long count = marketDao.count();//所有股票的数量
+            int sumPage = (int) (count / pageSize + (count % pageSize > 0 ? 1 : 0));// 总页数
+            List<Market> list;
+            String query = "";
+            for (int i = 0; i < sumPage; i++) {
+                list = marketDao.findAll(new PageRequest(i, pageSize)).getContent();//获取当前页的数据
+                for (int j = 0; j < list.size(); j++) {
+                    if (j == 0) {
+                        query = list.get(j).getNo();
+                    } else {
+                        query += ("," + list.get(j).getNo());
+                    }
+                }
+                HttpGet method = httpClient(query);
+                if (method != null) {
+                    method.releaseConnection();
                 }
             }
-            HttpGet method = httpClient(query);
-            if (method != null) {
-                method.releaseConnection();
-            }
-        }
 
-        Utils.sendEMail("行情添加成功");
+            Utils.sendEMail("行情添加成功");
 
-        //添加kdj数据
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                addKdj(Integer.parseInt(time));
-            }
-        }).start();
-/*        } else
-
-        {
+            //添加kdj数据
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    addKdj(Integer.parseInt(time));
+                }
+            }).start();
+        } else {
             Utils.sendEMail("今天没有行情");
-        }*/
+        }
     }
 
 
@@ -234,6 +232,7 @@ public class MarketService {
      * @param query 查询
      * @return
      */
+
     private HttpGet httpClient(String query) {
         try {
             HttpClient httpClient = new DefaultHttpClient();
@@ -300,8 +299,8 @@ public class MarketService {
             macd.setTime(time);
             macd.setNo(no);
             macd.setName(name);
-            macd.setEma12(oldMacd.getEma12().multiply(a11_13).add(price.multiply(a2_13)).setScale(3, 4));
-            macd.setEma26(oldMacd.getEma26().multiply(a25_27).add(price.multiply(a2_27)).setScale(3, 4));
+            macd.setEma12(oldMacd.getEma12().multiply(a11_13).add(price.multiply(a2_13)));
+            macd.setEma26(oldMacd.getEma26().multiply(a25_27).add(price.multiply(a2_27)));
             macd.setDiff(macd.getEma12().subtract(macd.getEma26()).setScale(3, 4));
             macd.setDea(oldMacd.getDea().multiply(a8_10).add(macd.getDiff().multiply(a2_10)).setScale(3, 4));
             macd.setBar((macd.getDiff().subtract(macd.getDea())).multiply(two).setScale(3, 4));
@@ -432,7 +431,7 @@ public class MarketService {
      * 添加kdj数据
      */
     public void addKdj(int time) {
-/*        long count = marketDao.count();
+ /*       long count = marketDao.count();
         int sumPage = (int) (count / pageSize + (count % pageSize > 0 ? 1 : 0));// 总页数
         int c = sumPage / 4;// 每页的条数
         new KdjAble(this, c, 1).start();
@@ -461,20 +460,24 @@ public class MarketService {
                     }
                 }
                 rsv = (records.getPrice().subtract(min)).divide(max.subtract(min), 4, 4).multiply(a100);
-                Kdj kk = kdjDao.findByNo(records.getNo(), pageRequest).getContent().get(0);
-                kdj.setK(kk.getK().multiply(a2_3).add(rsv.divide(a3, 2, 4)));
-                kdj.setD(kk.getD().multiply(a2_3).add(kdj.getK().divide(a3, 2, 4)));
-                kdj.setJ(a3.multiply(kdj.getK()).subtract(a2.multiply(kdj.getD())));
 
-                kdj.setK(kdj.getK().compareTo(a100) > 0 ? a100 : kdj.getK());
-                kdj.setD(kdj.getD().compareTo(a100) > 0 ? a100 : kdj.getD());
-                kdj.setJ(kdj.getJ().compareTo(a100) > 0 ? a100 : kdj.getJ());
+                List<Kdj> ks = kdjDao.findByNo(records.getNo(), pageRequest).getContent();
+                if (ks != null && ks.size() == 1) {
+                    Kdj kk = ks.get(0);
+                    kdj.setK(kk.getK().multiply(a2_3).add(rsv.divide(a3, 2, 4)));
+                    kdj.setD(kk.getD().multiply(a2_3).add(kdj.getK().divide(a3, 2, 4)));
+                    kdj.setJ(a3.multiply(kdj.getK()).subtract(a2.multiply(kdj.getD())));
 
-                kdj.setK(kdj.getK().compareTo(BigDecimal.ZERO) < 0 ? BigDecimal.ZERO : kdj.getK());
-                kdj.setD(kdj.getD().compareTo(BigDecimal.ZERO) < 0 ? BigDecimal.ZERO : kdj.getD());
-                kdj.setJ(kdj.getJ().compareTo(BigDecimal.ZERO) < 0 ? BigDecimal.ZERO : kdj.getJ());
+                    kdj.setK(kdj.getK().compareTo(a100) > 0 ? a100 : kdj.getK());
+                    kdj.setD(kdj.getD().compareTo(a100) > 0 ? a100 : kdj.getD());
+                    kdj.setJ(kdj.getJ().compareTo(a100) > 0 ? a100 : kdj.getJ());
 
-                kdjDao.save(kdj);
+                    kdj.setK(kdj.getK().compareTo(BigDecimal.ZERO) < 0 ? BigDecimal.ZERO : kdj.getK());
+                    kdj.setD(kdj.getD().compareTo(BigDecimal.ZERO) < 0 ? BigDecimal.ZERO : kdj.getD());
+                    kdj.setJ(kdj.getJ().compareTo(BigDecimal.ZERO) < 0 ? BigDecimal.ZERO : kdj.getJ());
+
+                    kdjDao.save(kdj);
+                }
             }
         }
         System.out.println("添加完毕");
