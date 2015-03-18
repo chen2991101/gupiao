@@ -150,7 +150,7 @@ public class MarketController {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                marketService.addKdj(20150206);
+                marketService.addKdj(20150318);
             }
         }).start();
         return "正在添加kdj";

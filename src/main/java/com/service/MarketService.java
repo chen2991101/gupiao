@@ -450,7 +450,7 @@ public class MarketService {
      * 添加kdj数据
      */
     public void addKdj(int time) {
- /*       long count = marketDao.count();
+/*        long count = marketDao.count();
         int sumPage = (int) (count / pageSize + (count % pageSize > 0 ? 1 : 0));// 总页数
         int c = sumPage / 4;// 每页的条数
         new KdjAble(this, c, 1).start();
@@ -459,10 +459,11 @@ public class MarketService {
         new KdjAble(this, c, 1 + 3 * c).start();
         new KdjAble(this, (int) (sumPage - 4 * c), 1 + 4 * c).start();*/
 
+
         List<Market> list = (List<Market>) marketDao.findAll();//获取所有的股票
         for (Market market : list) {
             MACDRecords records = macdRecordsDao.findByNoAndTime(market.getN(), time);
-            if (records != null && !records.getNo().equals("600318")) {
+            if (records != null) {
                 Kdj kdj = new Kdj();
                 kdj.setNo(records.getNo());
                 kdj.setName(records.getName());

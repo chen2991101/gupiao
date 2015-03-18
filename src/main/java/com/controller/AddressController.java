@@ -9,6 +9,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * 位置服务的controller
  * Created by hao on 2015/1/24.
@@ -27,9 +29,25 @@ public class AddressController {
     @RequestMapping(value = "uploadAddress")
     @ResponseBody
     public String uploadAddress(Address address) {
+        /*addressService.uploadAddress(address);
+        return "{success:true}";*/
+
+        Address a = new Address();
+        a.setAddress("成都");
+        addressService.uploadAddress(a);
+        return "{success:true}";
+    }
+
+
+    @RequestMapping(value = "address")
+    @ResponseBody
+    public String address(HttpServletRequest request) {
+        Address address = new Address();
+        address.setAddress("成都");
         addressService.uploadAddress(address);
         return "{success:true}";
     }
+
 
     /**
      * 查询地址信息
