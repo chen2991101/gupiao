@@ -16,5 +16,4 @@ public interface TimeDao extends PagingAndSortingRepository<Time, String> {
 
     @Query("select t.time from Time t")
     List<Integer> findTime(Pageable pageable);
-    
 }

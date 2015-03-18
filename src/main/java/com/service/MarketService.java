@@ -3,6 +3,7 @@ package com.service;
 import com.Utils;
 import com.dao.*;
 import com.entity.*;
+import com.sun.xml.bind.v2.runtime.output.StAXExStreamWriterOutput;
 import org.apache.commons.collections.map.HashedMap;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -314,13 +315,16 @@ public class MarketService {
      */
     public void addHistory() {
         long count = marketDao.count();
+
         int sumPage = (int) (count / pageSize + (count % pageSize > 0 ? 1 : 0));// 总页数
-        int c = sumPage / 4;// 每页的条数
+        int c = sumPage / 2;// 每页的条数
         new MyAble(this, c, 1).start();
+        new MyAble(this, (int) (sumPage - c), 1 + c).start();
+/*        new MyAble(this, c, 1).start();
         new MyAble(this, c, 1 + c).start();
         new MyAble(this, c, 1 + 2 * c).start();
         new MyAble(this, c, 1 + 3 * c).start();
-        new MyAble(this, (int) (sumPage - 4 * c), 1 + 4 * c).start();
+        new MyAble(this, (int) (sumPage - 4 * c), 1 + 4 * c).start();*/
     }
 
     /**
@@ -399,6 +403,21 @@ public class MarketService {
     public List<Market> findMarket(int page) {
         Page<Market> p = marketDao.findAll(new PageRequest(page - 1, pageSize));
         return p.getContent();
+    }
+
+    /**
+     * 添加所有纪录的时间
+     *
+     * @return
+     */
+    @Transactional
+    public boolean setAllTimes() {
+        List<Integer> times = macdRecordsDao.findAllTime();//获取所有的时间
+        for (Integer time : times) {
+            Time t = new Time(time);
+            timeDao.save(t);
+        }
+        return true;
     }
 
     /**

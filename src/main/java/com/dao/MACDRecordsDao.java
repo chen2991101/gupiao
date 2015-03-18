@@ -24,4 +24,7 @@ public interface MACDRecordsDao extends PagingAndSortingRepository<MACDRecords, 
     Page<MACDRecords> findByNoAndTime(String no, int time, Pageable pageable);
 
     MACDRecords findByNoAndTime(String no, int time);
+
+    @Query("SELECT m.time from MACDRecords m GROUP BY m.time ORDER BY m.time DESC")
+    List<Integer> findAllTime();
 }

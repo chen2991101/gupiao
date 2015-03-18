@@ -88,6 +88,19 @@ public class MarketController {
         return JSONObject.toJSONString(marketService.findRecords(page, rows, query));
     }
 
+
+    /**
+     * 设置时间
+     *
+     * @return
+     */
+    @RequestMapping(value = "setTimes", produces = Utils.textutf8)
+    @ResponseBody
+    public String setTimes() {
+        marketService.setAllTimes();
+        return "成功";
+    }
+
     /**
      * 删除已经退市的股票
      *
