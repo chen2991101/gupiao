@@ -29,21 +29,6 @@ public class AddressController {
     @RequestMapping(value = "uploadAddress")
     @ResponseBody
     public String uploadAddress(Address address) {
-        /*addressService.uploadAddress(address);
-        return "{success:true}";*/
-
-        Address a = new Address();
-        a.setAddress("成都");
-        addressService.uploadAddress(a);
-        return "{success:true}";
-    }
-
-
-    @RequestMapping(value = "address")
-    @ResponseBody
-    public String address(HttpServletRequest request) {
-        Address address = new Address();
-        address.setAddress("成都");
         addressService.uploadAddress(address);
         return "{success:true}";
     }

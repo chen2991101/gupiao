@@ -212,7 +212,7 @@ public class MarketService {
                 }
             }
 
-            Utils.sendEMail("行情添加成功");
+            Utils.sendEMail("行情添加成功,正在添加kdj信息");
 
             //添加kdj数据
             new Thread(new Runnable() {
@@ -500,7 +500,7 @@ public class MarketService {
                 }
             }
         }
-        System.out.println("添加完毕");
+        Utils.sendEMail("kdj行情添加成功");
     }
 
     @Transactional
