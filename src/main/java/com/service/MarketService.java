@@ -200,7 +200,6 @@ public class MarketService {
         for (int i = 0; i < sumPage; i++) {
             list = marketDao.findAll(new PageRequest(i, pageSize)).getContent();//获取当前页的数据
             for (int j = 0; j < list.size(); j++) {
-                System.out.println(list.get(i).getNo());
                 if (j == 0) {
                     query = list.get(j).getNo();
                 } else {
@@ -213,8 +212,9 @@ public class MarketService {
             }
         }
 
-        Utils.sendEMail("行情添加成功,正在添加kdj信息");
+        // Utils.sendEMail("行情添加成功,正在添加kdj信息");
 
+          /*
         //添加kdj数据
         new Thread(new Runnable() {
             @Override
@@ -223,7 +223,7 @@ public class MarketService {
                 addKdj(20150320);
             }
         }).start();
-  /*      } else {
+     } else {
             Utils.sendEMail("今天没有行情");
         }*/
     }
@@ -254,7 +254,8 @@ public class MarketService {
             return method;
         } catch (Exception e) {
             e.printStackTrace();
-            httpClient(query);
+            System.out.println(e.getMessage());
+//            httpClient(query);
         }
         return null;
     }
