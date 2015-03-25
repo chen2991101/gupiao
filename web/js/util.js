@@ -1,5 +1,5 @@
-//var basrUrl = 'http://127.0.0.1:8080';
-var basrUrl = 'http://haogupiao.duapp.com';
+var basrUrl = 'http://127.0.0.1:8080';
+//var basrUrl = 'http://haogupiao.duapp.com';
 
 
 Date.prototype.Format = function (fmt) { // author: meizz
