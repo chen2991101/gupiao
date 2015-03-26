@@ -3,7 +3,6 @@ package com.service;
 import com.Utils;
 import com.dao.*;
 import com.entity.*;
-import com.sun.xml.bind.v2.runtime.output.StAXExStreamWriterOutput;
 import org.apache.commons.collections.map.HashedMap;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -25,7 +24,10 @@ import javax.persistence.criteria.*;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 操作股票的service
@@ -39,6 +41,8 @@ public class MarketService {
     RecordsDao recordsDao;
     @Autowired
     MACDRecordsDao macdRecordsDao;
+    @Autowired
+    MacdCrossDao macdCrossDao;//macd金叉的dao层
     @Autowired
     TimeDao timeDao;
     @Autowired
@@ -420,9 +424,34 @@ public class MarketService {
      *
      * @return
      */
-    public List<Macd> findMacd() {
-        List<Integer> times = timeDao.findTime(new PageRequest(0, 2, new Sort(new Sort.Order(Sort.Direction.DESC, "time"))));
-        return macdDao.findMacd(times.get(1), times.get(0));
+    @Transactional
+    public List<MacdCross> findMacd() {
+        List<MacdCross> macdCrosses = new ArrayList<MacdCross>();//需要返回的数据
+        List<Time> times = timeDao.findAll(pageRequest).getContent();//获取最新的一个日期
+        if (times != null && times.size() == 1) {
+            Time time = times.get(0);//获取最新数据的时间
+            switch (time.getMacdStatus()) {
+                case 0:
+                    //没有操作，需要初始化
+                    time.setMacdStatus(1);//标示正在初始化
+                    List<Integer> tt = timeDao.findTime(new PageRequest(0, 2, new Sort(new Sort.Order(Sort.Direction.DESC, "time"))));
+                    List<Macd> macds = macdDao.findMacd(tt.get(1), tt.get(0));
+                    for (Macd macd : macds) {
+                        //转换数据
+                        macdCrosses.add(new MacdCross(macd.getDiff(), macd.getNo(), macd.getName(), macd.getTime()));
+                    }
+                    macdCrossDao.save(macdCrosses);//保存数据
+                    time.setMacdStatus(2);//加载完成
+                    break;
+                case 1:
+                    //正在初始化当中
+                    break;
+                default:
+                    macdCrosses = macdCrossDao.findByTimeOrderByDiffAsc(time.getTime());
+                    //数据已经获取完毕，直接调用即可
+            }
+        }
+        return macdCrosses;
     }
 
     /**
@@ -496,7 +525,6 @@ public class MarketService {
     public List<MACDRecords> findByNoAndTime(String no, int time) {
         return macdRecordsDao.findByNoAndTime(no, time, page9).getContent();
     }
-
 
 
     public List<MACDRecords> findByNoOrderByTime(String no) {

@@ -56,8 +56,8 @@
         <property name="url" value="jdbc:mysql://svridpm180k1on1.mysql.duapp.com:10310/svridpm180k1on1"/>
         <property name="username" value="bae"/>
         <property name="password" value="15FSzP6X0BSEsRORkajVwmsGeSxjVvA1"/>
-    </bean>
-    -->
+    </bean>-->
+
     <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
         <property name="entityManagerFactory" ref="entityManagerFactory"/>
     </bean>

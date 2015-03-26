@@ -21,6 +21,15 @@ public class Time extends BaseEntity {
 
     private int time;
 
+    private int macdStatus;//macd金叉的状态 0：未初始化 1：正在初始化 2：初始化完成
+
+    public int getMacdStatus() {
+        return macdStatus;
+    }
+
+    public void setMacdStatus(int macdStatus) {
+        this.macdStatus = macdStatus;
+    }
 
     public int getTime() {
         return time;
