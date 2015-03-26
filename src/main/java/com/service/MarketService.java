@@ -44,6 +44,8 @@ public class MarketService {
     @Autowired
     MacdCrossDao macdCrossDao;//macd金叉的dao层
     @Autowired
+    KdjCrossDao kdjCrossDao;//kdj金叉的数据
+    @Autowired
     TimeDao timeDao;
     @Autowired
     KdjDao kdjDao;
@@ -461,9 +463,33 @@ public class MarketService {
      * @return
      */
     @Transactional
-    public List<Kdj> findKdjCross() {
-        List<Integer> tt = timeDao.findTime(new PageRequest(0, 2, new Sort(new Sort.Order(Sort.Direction.DESC, "time"))));
-        return kdjDao.findCross(tt.get(1), tt.get(0));
+    public List<KdjCross> findKdjCross() {
+        List<KdjCross> kdjCrosses = new ArrayList<KdjCross>();//需要返回的数据
+        List<Time> times = timeDao.findAll(pageRequest).getContent();//获取最新的一个日期
+        if (times != null && times.size() == 1) {
+            Time time = times.get(0);//获取最新数据的时间
+            switch (time.getKdjStatus()) {
+                case 0:
+                    //没有操作，需要初始化
+                    time.setKdjStatus(1);//标示正在初始化
+                    List<Integer> tt = timeDao.findTime(new PageRequest(0, 2, new Sort(new Sort.Order(Sort.Direction.DESC, "time"))));
+                    List<Kdj> kdjs = kdjDao.findCross(tt.get(1), tt.get(0));
+                    for (Kdj kdj : kdjs) {
+                        //转换数据
+                        kdjCrosses.add(new KdjCross(kdj.getNo(), kdj.getName(), kdj.getTime()));
+                    }
+                    kdjCrossDao.save(kdjCrosses);//保存数据
+                    time.setKdjStatus(2);//加载完成
+                    break;
+                case 1:
+                    //正在初始化当中
+                    break;
+                default:
+                    kdjCrosses = kdjCrossDao.findByTime(time.getTime());
+                    //数据已经获取完毕，直接调用即可
+            }
+        }
+        return kdjCrosses;
     }
 
     /**
