@@ -40,24 +40,24 @@
         </property>
     </bean>
 
-
-    <bean id="dataSource"
-          class="org.springframework.jdbc.datasource.DriverManagerDataSource">
-        <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
-        <property name="url"
-                  value="jdbc:mysql://127.0.0.1:3306/chen?createDatabaseIfNotExist=true&amp;useUnicode=true&amp;characterEncoding=utf-8&amp;zeroDateTimeBehavior=convertToNull&amp;transformedBitIsBoolean=true"/>
-        <property name="username" value="root"/>
-        <property name="password" value="195822080"/>
-    </bean>
+    <
     <!--
         <bean id="dataSource"
               class="org.springframework.jdbc.datasource.DriverManagerDataSource">
             <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
-            <property name="url" value="jdbc:mysql://sqld.duapp.com:4050/PUtVEkYLnEnXiUEDEwFD"/>
-            <property name="username" value="WC4q5m8ZXbMTWT7Glhi4OrCV"/>
-            <property name="password" value="15FSzP6X0BSEsRORkajVwmsGeSxjVvA1"/>
+            <property name="url"
+                      value="jdbc:mysql://127.0.0.1:3306/chen?createDatabaseIfNotExist=true&amp;useUnicode=true&amp;characterEncoding=utf-8&amp;zeroDateTimeBehavior=convertToNull&amp;transformedBitIsBoolean=true"/>
+            <property name="username" value="root"/>
+            <property name="password" value="195822080"/>
         </bean>
-    -->
+        -->
+    <bean id="dataSource"
+          class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+        <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
+        <property name="url" value="jdbc:mysql://svridpm180k1on1.mysql.duapp.com:10310/svridpm180k1on1"/>
+        <property name="username" value="bae"/>
+        <property name="password" value="15FSzP6X0BSEsRORkajVwmsGeSxjVvA1"/>
+    </bean>
     <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
         <property name="entityManagerFactory" ref="entityManagerFactory"/>
     </bean>

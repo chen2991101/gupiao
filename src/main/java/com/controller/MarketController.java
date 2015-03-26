@@ -45,15 +45,13 @@ public class MarketController {
     @RequestMapping(value = "addRecords", produces = Utils.textutf8)
     @ResponseBody
     public String addRecords() {
-        System.out.println("hello");
-        marketService.addRecords();
-/*        new Thread(new Runnable() {
+        new Thread(new Runnable() {
             @Override
             public void run() {
                 marketService.addRecords();
             }
-        }).start();*/
-        return "你好吗";
+        }).start();
+        return "正在获取数据";
     }
 
 

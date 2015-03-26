@@ -183,49 +183,46 @@ public class MarketService {
      * 添加股票行情
      */
     public void addRecords() {
-/*
         final String time = dateFormat.format(new Date());
-        if (time.equals(Utils.getGuPiaoDate())) {*//*
+        if (time.equals(Utils.getGuPiaoDate())) {
             // 如果进来有行情才获取数据
             //先添加时间
             List<Time> times = timeDao.findByTime(Integer.parseInt(time));
             if (times.size() == 0) {
                 timeDao.save(new Time(Integer.parseInt(time)));
-            }*/
+            }
 
-        long count = marketDao.count();//所有股票的数量
-        int sumPage = (int) (count / pageSize + (count % pageSize > 0 ? 1 : 0));// 总页数
-        List<Market> list;
-        String query = "";
-        for (int i = 0; i < sumPage; i++) {
-            list = marketDao.findAll(new PageRequest(i, pageSize)).getContent();//获取当前页的数据
-            for (int j = 0; j < list.size(); j++) {
-                if (j == 0) {
-                    query = list.get(j).getNo();
-                } else {
-                    query += ("," + list.get(j).getNo());
+            long count = marketDao.count();//所有股票的数量
+            int sumPage = (int) (count / pageSize + (count % pageSize > 0 ? 1 : 0));// 总页数
+            List<Market> list;
+            String query = "";
+            for (int i = 0; i < sumPage; i++) {
+                list = marketDao.findAll(new PageRequest(i, pageSize)).getContent();//获取当前页的数据
+                for (int j = 0; j < list.size(); j++) {
+                    if (j == 0) {
+                        query = list.get(j).getNo();
+                    } else {
+                        query += ("," + list.get(j).getNo());
+                    }
+                }
+                HttpGet method = httpClient(query);
+                if (method != null) {
+                    method.releaseConnection();
                 }
             }
-            HttpGet method = httpClient(query);
-            if (method != null) {
-                method.releaseConnection();
-            }
-        }
 
-        // Utils.sendEMail("行情添加成功,正在添加kdj信息");
+            Utils.sendEMail("行情添加成功,正在添加kdj信息");
 
-          /*
-        //添加kdj数据
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                //addKdj(Integer.parseInt(time));
-                addKdj(20150320);
-            }
-        }).start();
-     } else {
+            //添加kdj数据
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    addKdj(Integer.parseInt(time));
+                }
+            }).start();
+        } else {
             Utils.sendEMail("今天没有行情");
-        }*/
+        }
     }
 
 
@@ -235,7 +232,7 @@ public class MarketService {
      * @param query 查询
      * @return
      */
-
+    @Transactional
     private HttpGet httpClient(String query) {
         try {
             HttpClient httpClient = new DefaultHttpClient();
@@ -253,9 +250,7 @@ public class MarketService {
             }
             return method;
         } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println(e.getMessage());
-//            httpClient(query);
+            httpClient(query);
         }
         return null;
     }
@@ -265,12 +260,10 @@ public class MarketService {
      *
      * @param str
      */
-    @Transactional
     public void addRecords(String str) {
         String[] array = str.split("~");
-        float upanddown2 = Float.parseFloat(array[32]);//股票当天的涨幅
         BigDecimal deal = new BigDecimal(array[6]);//交易量
-        if (upanddown2 != 0 && deal.compareTo(BigDecimal.ZERO) != 0) {
+        if (deal.compareTo(BigDecimal.ZERO) != 0) {
             //当天没有停盘
             MACDRecords macdRecords = new MACDRecords();
             macdRecords.setNo(array[2]);
@@ -287,7 +280,6 @@ public class MarketService {
             macdRecords.setIn_dish(Long.parseLong(array[8]));//内盘
             macdRecords.setUpanddown(new BigDecimal(array[31]));//涨幅
             macdRecords.setUpanddown2(Float.parseFloat(array[32]));//涨幅比
-
             macdRecordsDao.save(macdRecords);
             //保存成功，添加macd
             addMacd(macdRecords.getNo(), macdRecords.getName(), macdRecords.getTime(), macdRecords.getPrice());
@@ -336,7 +328,7 @@ public class MarketService {
     public void macd() {
         long count = marketDao.count();
         int sumPage = (int) (count / pageSize + (count % pageSize > 0 ? 1 : 0));// 总页数
-        int c = sumPage / 4;// 每页的条数
+        int c = sumPage / 5;// 每页的条数
         new MACDAble(this, c, 1).start();
         new MACDAble(this, c, 1 + c).start();
         new MACDAble(this, c, 1 + 2 * c).start();
@@ -455,7 +447,7 @@ public class MarketService {
     public void addKdj(int time) {
 /*        long count = marketDao.count();
         int sumPage = (int) (count / pageSize + (count % pageSize > 0 ? 1 : 0));// 总页数
-        int c = sumPage / 4;// 每页的条数
+        int c = sumPage / 5;// 每页的条数
         new KdjAble(this, c, 1).start();
         new KdjAble(this, c, 1 + c).start();
         new KdjAble(this, c, 1 + 2 * c).start();
@@ -482,7 +474,13 @@ public class MarketService {
                         min = min.compareTo(m.getLowest()) > 0 ? m.getLowest() : min;
                     }
                 }
-                rsv = (records.getPrice().subtract(min)).divide(max.subtract(min), 4, 4).multiply(a100);
+
+
+                BigDecimal c = max.subtract(min);
+                if (c.compareTo(BigDecimal.ZERO) == 0) {
+                    c = a100;
+                }
+                rsv = (records.getPrice().subtract(min)).divide(c, 4, 4).multiply(a100);
 
                 List<Kdj> ks = kdjDao.findByNo(records.getNo(), pageRequest).getContent();
                 if (ks != null && ks.size() == 1) {
