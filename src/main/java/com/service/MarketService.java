@@ -421,24 +421,8 @@ public class MarketService {
      * @return
      */
     public List<Macd> findMacd() {
-
         List<Integer> times = timeDao.findTime(new PageRequest(0, 2, new Sort(new Sort.Order(Sort.Direction.DESC, "time"))));
-
-        List<Macd> old = macdDao.findDiffLtDea(times.get(1));
-        Map<String, Macd> map = new HashMap<String, Macd>();
-        for (Macd macd : old) {
-            map.put(macd.getNo(), macd);
-        }
-        old = null;
-        List<Macd> macds = new ArrayList<Macd>();
-        List<Macd> list = macdDao.findDiffBtDea(times.get(0));
-        for (Macd macd : list) {
-            if (map.get(macd.getNo()) != null) {
-                macds.add(macd);
-            }
-        }
-        Collections.sort(macds, new MyComparator());
-        return macds;
+        return macdDao.findMacd(times.get(1), times.get(0));
     }
 
     /**
@@ -513,17 +497,6 @@ public class MarketService {
         return macdRecordsDao.findByNoAndTime(no, time, page9).getContent();
     }
 
-    /**
-     * list排序
-     */
-    private class MyComparator implements Comparator {
-        public int compare(Object o1, Object o2) {
-            Macd s1 = (Macd) o1;
-            Macd s2 = (Macd) o2;
-            return s1.getDiff().compareTo(s2.getDiff());
-        }
-
-    }
 
 
     public List<MACDRecords> findByNoOrderByTime(String no) {
