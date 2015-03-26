@@ -12,6 +12,16 @@ import java.math.BigDecimal;
 @Entity
 @Table(name = "tb_kdj")
 public class Kdj extends BaseEntity {
+
+    public Kdj() {
+    }
+
+    public Kdj(String no, String name,int time) {
+        this.no = no;
+        this.name = name;
+        this.time=time;
+    }
+
     private String no;//股票代码
     private String name;//股票名称
     private BigDecimal k;

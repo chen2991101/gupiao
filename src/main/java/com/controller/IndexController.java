@@ -23,18 +23,22 @@ public class IndexController {
     @RequestMapping(value = "index", produces = Utils.textutf8)
     public void index(final HttpServletRequest request) {
         String ip = request.getHeader("x-forwarded-for");
+
         if (request.getHeader("x-forwarded-for") == null) {
             ip = request.getRemoteAddr();
         } else {
             ip = ip.split(",")[0];
         }
-        final String finalIp = ip;
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                ipService.addIp(finalIp);
-            }
-        }).start();
+
+        if (!ip.equals("127.0.0.1")) {
+            final String finalIp = ip;
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    ipService.addIp(finalIp);
+                }
+            }).start();
+        }
     }
 
 

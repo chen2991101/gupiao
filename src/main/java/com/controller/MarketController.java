@@ -143,6 +143,12 @@ public class MarketController {
         return JSONObject.toJSONString(marketService.findMacd());
     }
 
+    @RequestMapping(value = "findKdjCross", produces = Utils.textutf8)
+    @ResponseBody
+    public String findKdjCross() {
+        return JSONObject.toJSONString(marketService.findKdjCross());
+    }
+
 
     @RequestMapping(value = "addKdj", produces = Utils.textutf8)
     @ResponseBody

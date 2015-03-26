@@ -454,6 +454,18 @@ public class MarketService {
         return macdCrosses;
     }
 
+
+    /**
+     * 查询kdj金叉
+     *
+     * @return
+     */
+    @Transactional
+    public List<Kdj> findKdjCross() {
+        List<Integer> tt = timeDao.findTime(new PageRequest(0, 2, new Sort(new Sort.Order(Sort.Direction.DESC, "time"))));
+        return kdjDao.findCross(tt.get(1), tt.get(0));
+    }
+
     /**
      * 添加kdj数据
      */
