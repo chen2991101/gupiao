@@ -17,15 +17,45 @@ public class KdjCross extends BaseEntity {
     public KdjCross() {
     }
 
-    public KdjCross(String no, String name, int time) {
+    public KdjCross(String no, String name, int time,BigDecimal k,BigDecimal d,BigDecimal j) {
         this.no = no;
         this.name = name;
         this.time = time;
+        this.k=k;
+        this.d=d;
+        this.j=j;
     }
 
     private String no;
     private String name;
     private int time;
+    private BigDecimal k;
+    private BigDecimal d;
+    private BigDecimal j;
+
+    public BigDecimal getK() {
+        return k;
+    }
+
+    public void setK(BigDecimal k) {
+        this.k = k;
+    }
+
+    public BigDecimal getD() {
+        return d;
+    }
+
+    public void setD(BigDecimal d) {
+        this.d = d;
+    }
+
+    public BigDecimal getJ() {
+        return j;
+    }
+
+    public void setJ(BigDecimal j) {
+        this.j = j;
+    }
 
     public String getNo() {
         return no;

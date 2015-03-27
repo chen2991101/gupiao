@@ -14,6 +14,6 @@ public interface KdjDao extends PagingAndSortingRepository<Kdj, String> {
     Page<Kdj> findByNo(String no, Pageable pageable);
 
 
-    @Query("select new Kdj(b.no,b.name,b.time) FROM Kdj a,Kdj b where a.no=b.no and a.time=?1 and b.time=?2 AND a.k<b.k and a.d<b.d and a.j<b.j AND a.j<a.k AND b.j>b.k and a.k<a.d and b.k >b.d")
-    List<Kdj> findCross(int time1,int time2);
+    @Query("select new Kdj(b.no,b.name,b.time,b.k,b.d,b.j) FROM Kdj a,Kdj b where a.no=b.no and a.time=?1 and b.time=?2 AND a.k<b.k and a.d<b.d and a.j<b.j AND a.j<a.k AND b.j>b.k and a.k<a.d and b.k >b.d")
+    List<Kdj> findCross(int time1, int time2);
 }

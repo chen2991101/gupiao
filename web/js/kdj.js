@@ -9,6 +9,9 @@ $(function () {
             columns: [[
                 {field: 'no', title: '代码', width: 100, align: 'center'},
                 {field: 'name', title: '名称', width: 100, align: 'center'},
+                {field: 'k', title: 'k', width: 100, align: 'center'},
+                {field: 'd', title: 'd', width: 100, align: 'center'},
+                {field: 'j', title: 'j', width: 100, align: 'center'},
                 {
                     field: 'time',
                     title: '时间',

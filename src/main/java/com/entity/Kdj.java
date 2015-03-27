@@ -16,10 +16,13 @@ public class Kdj extends BaseEntity {
     public Kdj() {
     }
 
-    public Kdj(String no, String name,int time) {
+    public Kdj(String no, String name, int time, BigDecimal k, BigDecimal d, BigDecimal j) {
         this.no = no;
         this.name = name;
-        this.time=time;
+        this.time = time;
+        this.k = k;
+        this.d = d;
+        this.j = j;
     }
 
     private String no;//股票代码
