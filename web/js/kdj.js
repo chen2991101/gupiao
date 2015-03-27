@@ -1,5 +1,5 @@
 $(function () {
-        $('#table_macd').datagrid({
+        $('#table_kdj').datagrid({
             url: basrUrl + "/market/findKdjCross.do",
             rownumbers: true,
             fit: true,
