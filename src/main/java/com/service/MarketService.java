@@ -192,6 +192,14 @@ public class MarketService {
         final String time = dateFormat.format(new Date());
         if (time.equals(Utils.getGuPiaoDate())) {
             // 如果进来有行情才获取数据
+
+            long recordsCount = macdRecordsDao.countByTime(Integer.parseInt(time));//计算今天有没有添加数据
+            if (recordsCount > 0) {
+                Utils.sendEMail("今天的数据已经添加");
+                return;
+            }
+
+
             //先添加时间
             List<Time> times = timeDao.findByTime(Integer.parseInt(time));
             if (times.size() == 0) {

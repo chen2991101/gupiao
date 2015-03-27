@@ -27,4 +27,7 @@ public interface MACDRecordsDao extends PagingAndSortingRepository<MACDRecords, 
 
     @Query("SELECT m.time from MACDRecords m GROUP BY m.time ORDER BY m.time DESC")
     List<Integer> findAllTime();
+
+    @Query("select count(m.id) from MACDRecords m where m.time=?1")
+    long countByTime(int time);
 }
