@@ -7,15 +7,6 @@
     <groupId>gupiao</groupId>
     <artifactId>gupiao</artifactId>
     <version>1.0-SNAPSHOT</version>
-    <repositories>
-        <repository>
-            <id>bae</id>
-            <url>http://maven.duapp.com/nexus/content/groups/public/</url>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-        </repository>
-    </repositories>
 
     <packaging>war</packaging>
 
@@ -263,13 +254,6 @@
             <groupId>org.projectreactor</groupId>
             <artifactId>reactor-spring</artifactId>
             <version>1.0.0.RELEASE</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.baidu.bae</groupId>
-            <artifactId>baev3-sdk</artifactId>
-            <version>1.0.1</version>
-            <type>jar</type>
         </dependency>
 
         <dependency>
