@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.criteria.*;
+import javax.rmi.CORBA.Util;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
@@ -484,7 +485,7 @@ public class MarketService {
                     List<Kdj> kdjs = kdjDao.findCross(tt.get(1), tt.get(0));
                     for (Kdj kdj : kdjs) {
                         //转换数据
-                        kdjCrosses.add(new KdjCross(kdj.getNo(), kdj.getName(), kdj.getTime(),kdj.getK(),kdj.getD(),kdj.getJ()));
+                        kdjCrosses.add(new KdjCross(kdj.getNo(), kdj.getName(), kdj.getTime(), kdj.getK(), kdj.getD(), kdj.getJ()));
                     }
                     kdjCrossDao.save(kdjCrosses);//保存数据
                     time.setKdjStatus(2);//加载完成
